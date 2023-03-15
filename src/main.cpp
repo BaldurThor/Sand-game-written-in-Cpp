@@ -4,7 +4,9 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-const int GRID_CELL_SIZE = 10;
+const int TICK_RATE = 1000 / 60;
+const int GRID_CELL_SIZE = 2;
+const int BRUSH_SIZE = 5; // must be odd
 const int GRID_WIDTH = SCREEN_WIDTH / GRID_CELL_SIZE;
 const int GRID_HEIGHT = SCREEN_HEIGHT / GRID_CELL_SIZE;
 
@@ -83,27 +85,45 @@ void render() {
     SDL_RenderPresent(renderer);
 }
 
+void fill(int x, int y, CellState state) {
+    int brush_size = BRUSH_SIZE / 2;
+    
+}
+
 int main(int argc, char* argv[])
 {
     if (!init()) {
         cout << "Failed to initialize!" << endl;
     } else {
+        Uint64 ticksA = 0, ticksB = 0, ticksDelta;
         bool quit = false;
         SDL_Event e;
+        int x, y;
 
         while (!quit) {
+            ticksA = SDL_GetTicks();
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
-                } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+                } 
+                /*else if (e.type == SDL_MOUSEBUTTONDOWN) {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
                     grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE] = SAND;
+                }*/
+            }
+            if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                if (x < SCREEN_WIDTH && y < SCREEN_HEIGHT && x >= 0 && y >= 0) {
+                    fill(x, y, SAND);
                 }
             }
-
-            update();
-            render();
+            ticksDelta = ticksA - ticksB;
+            if (ticksDelta > TICK_RATE) {
+                ticksB = ticksA;
+                update();
+                render();
+            }
+            
         }
     }
 
