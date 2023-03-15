@@ -1,14 +1,8 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
-const int TICK_RATE = 1000 / 60;
-const int GRID_CELL_SIZE = 2;
-const int BRUSH_SIZE = 5; // must be odd
-const int GRID_WIDTH = SCREEN_WIDTH / GRID_CELL_SIZE;
-const int GRID_HEIGHT = SCREEN_HEIGHT / GRID_CELL_SIZE;
+#include "RNG.h"
+#include "materials.h"
+#include "consts.h"
 
 using namespace std;
 
@@ -98,13 +92,16 @@ void render() {
 
 void fill(int x, int y, CellState state) {
     int brush_size = BRUSH_SIZE / 2;
+    bool* noice = RNG::get_noice(BRUSH_SIZE);
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
+                cout << xi << " " << yi << endl;
                 grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
             }
         }
     }
+    delete noice;
 }
 
 int main(int argc, char* argv[])
@@ -130,6 +127,8 @@ int main(int argc, char* argv[])
                 }*/
             }
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                fill(x, y, SAND);
+            }
                 fill(x, y, SAND);
             }
             ticksDelta = ticksA - ticksB;
