@@ -52,23 +52,27 @@ void close() {
 }
 
 void update() {
+
+    int velocity = 1;
+
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height] == SAND) {
                 if (height == GRID_HEIGHT - 1) {
+                    cout << "Sand at bottom" << endl;
                     continue;
                 }
                 if (grid[width][height + 1] == NONE) {
-                    grid[width][height + 1] = SAND;
+                    grid[width + velocity][height + 1] = SAND;
                     grid[width][height] = NONE;
-                }
-                if (grid[width][height + 1] == SAND) {
+                } else if (grid[width + 1][height + 1] == NONE) {
                     grid[width + 1][height + 1] = SAND;
                     grid[width][height] = NONE;
-                } else if (grid[width - 1][height + 1] == SAND) {
+                } else if (grid[width - 1][height + 1] == NONE) {
                     grid[width - 1][height + 1] = SAND;
                     grid[width][height] = NONE;
                 }
+
 
             }
         }
@@ -94,7 +98,13 @@ void render() {
 
 void fill(int x, int y, CellState state) {
     int brush_size = BRUSH_SIZE / 2;
-    
+    for (int xi = x - brush_size; xi < x + brush_size; xi++) {
+        for (int yi = y - brush_size; yi < y + brush_size; yi++) {
+            if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
+                grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
+            }
+        }
+    }
 }
 
 int main(int argc, char* argv[])
@@ -120,9 +130,7 @@ int main(int argc, char* argv[])
                 }*/
             }
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                if (x < SCREEN_WIDTH && y < SCREEN_HEIGHT && x >= 0 && y >= 0) {
-                    fill(x, y, SAND);
-                }
+                fill(x, y, SAND);
             }
             ticksDelta = ticksA - ticksB;
             if (ticksDelta > TICK_RATE) {
