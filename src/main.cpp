@@ -6,12 +6,7 @@
 
 using namespace std;
 
-enum CellState {
-    NONE,
-    SAND
-};
-
-CellState grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
+Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
@@ -79,9 +74,9 @@ void render() {
     SDL_RenderPresent(renderer);
 }
 
-void fill(int x, int y, CellState state) {
+void fill(int x, int y, Material state) {
     int brush_size = BRUSH_SIZE / 2;
-    bool* noice = RNG::get_noice(BRUSH_SIZE);
+    bool* noice = RNG::get_noice(BRUSH_SIZE, 0.0);
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
