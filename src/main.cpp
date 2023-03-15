@@ -6,6 +6,12 @@
 
 using namespace std;
 
+struct Pixel {
+    int x, y;
+    int vx, vy;
+    Material material;
+};
+
 Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
 SDL_Window *window = NULL;
@@ -41,28 +47,29 @@ void close() {
 }
 
 void update() {
-
-    int velocity = 1;
+    bool isFalling;
 
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height] == SAND) {
+                int vel = RNG::get_int(1, 2); // generate a random velocity for the sand particle
                 if (height == GRID_HEIGHT - 1) {
-                    cout << "Sand at bottom" << endl;
+                    isFalling = false;
                     continue;
                 }
                 if (grid[width][height + 1] == NONE) {
-                    grid[width + velocity][height + 1] = SAND;
+                    grid[width][height + 1] = SAND;
                     grid[width][height] = NONE;
-                } else if (grid[width + 1][height + 1] == NONE) {
-                    grid[width + 1][height + 1] = SAND;
+                    isFalling = true;
+                } else if (grid[width + vel][height + 1] == NONE && isFalling) {
+                    grid[width + vel][height + 1] = SAND;
                     grid[width][height] = NONE;
-                } else if (grid[width - 1][height + 1] == NONE) {
-                    grid[width - 1][height + 1] = SAND;
+                    isFalling = false;
+                } else if (grid[width - vel][height + 1] == NONE && isFalling) {
+                    grid[width - vel][height + 1] = SAND;
                     grid[width][height] = NONE;
+                    isFalling = false;
                 }
-
-
             }
         }
     }
@@ -91,7 +98,6 @@ void fill(int x, int y, Material state) {
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                cout << xi << " " << yi << endl;
                 grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
             }
         }
@@ -124,10 +130,8 @@ int main(int argc, char* argv[])
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
                 fill(x, y, SAND);
             }
-                fill(x, y, SAND);
-            }
             ticksDelta = ticksA - ticksB;
-            if (ticksDelta > TICK_RATE) {
+            if (ticksDelta > TICK_RATE / 2) {
                 ticksB = ticksA;
                 update();
                 render();
@@ -135,7 +139,6 @@ int main(int argc, char* argv[])
             
         }
     }
-
     close();
     return 0;
 }
