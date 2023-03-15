@@ -86,11 +86,9 @@ bool right_update(int width, int height, Material mat) {
 }
 
 void update() {
-    int count = 0;
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height] != NONE) {
-                count++;
                 Material mat = grid[width][height], mat_place;
                 if (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER))) {
                     mat_place = grid[width][height + 1];
@@ -112,7 +110,6 @@ void update() {
             }
         }
     }
-    cout << count << endl;
 }
 
 void render() {
