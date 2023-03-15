@@ -60,6 +60,13 @@ void update() {
                     grid[width][height + 1] = SAND;
                     grid[width][height] = NONE;
                 }
+                if (grid[width][height + 1] == SAND) {
+                    grid[width + 1][height + 1] = SAND;
+                    grid[width][height] = NONE;
+                } else if (grid[width - 1][height + 1] == SAND) {
+                    grid[width - 1][height + 1] = SAND;
+                    grid[width][height] = NONE;
+                }
 
             }
         }
