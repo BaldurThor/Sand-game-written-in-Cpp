@@ -87,6 +87,16 @@ void render() {
 
 void fill(int x, int y, Material state) {
     int brush_size = BRUSH_SIZE / 2;
+    bool* noice = RNG::get_noice(BRUSH_SIZE, 0.0);
+    for (int xi = x - brush_size; xi < x + brush_size; xi++) {
+        for (int yi = y - brush_size; yi < y + brush_size; yi++) {
+            if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
+                cout << xi << " " << yi << endl;
+                grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
+            }
+        }
+    }
+    delete noice;
     
 }
 
