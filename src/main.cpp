@@ -6,8 +6,6 @@
 
 using namespace std;
 
-Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
-
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
@@ -42,13 +40,12 @@ void close() {
 
 void update() {
 
-    int velocity = 1;
+    int velocity = 0;
 
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height] == SAND) {
                 if (height == GRID_HEIGHT - 1) {
-                    cout << "Sand at bottom" << endl;
                     continue;
                 }
                 if (grid[width][height + 1] == NONE) {
@@ -87,56 +84,76 @@ void render() {
 
 void fill(int x, int y, Material state) {
     int brush_size = BRUSH_SIZE / 2;
-    bool* noice = RNG::get_noice(BRUSH_SIZE, 0.0);
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                cout << xi << " " << yi << endl;
                 grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
             }
         }
     }
-    delete noice;
-    
+}
+
+void run() {
+    Uint64 ticksA = 0, ticksB = 0, ticksDelta;
+    bool quit = false, mousePressed = false;
+    SDL_Event e;
+    Material mat = SAND;
+    int x, y;
+
+    while (!quit) {
+        ticksA = SDL_GetTicks();
+        while (SDL_PollEvent(&e) != 0) {
+            switch(e.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    mousePressed = true;
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    mousePressed = false;
+                    break;
+                case SDL_KEYDOWN:
+                    switch (e.key.keysym.sym) {
+                        case SDLK_1:
+                            mat = SAND;
+                            break;
+                        case SDLK_2:
+                            mat = GRAVEL;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (mousePressed) {
+            if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                fill(x, y, mat);
+            }
+            else {
+                fill(x, y, NONE);
+            }
+        }
+        ticksDelta = ticksA - ticksB;
+        if (ticksDelta > TICK_RATE) {
+            ticksB = ticksA;
+            update();
+            render();
+        }
+    }
 }
 
 int main(int argc, char* argv[])
 {
     if (!init()) {
         cout << "Failed to initialize!" << endl;
-    } else {
-        Uint64 ticksA = 0, ticksB = 0, ticksDelta;
-        bool quit = false;
-        SDL_Event e;
-        int x, y;
-
-        while (!quit) {
-            ticksA = SDL_GetTicks();
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type == SDL_QUIT) {
-                    quit = true;
-                } 
-                /*else if (e.type == SDL_MOUSEBUTTONDOWN) {
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE] = SAND;
-                }*/
-            }
-            if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                if (x < SCREEN_WIDTH && y < SCREEN_HEIGHT && x >= 0 && y >= 0) {
-                    fill(x, y, SAND);
-                }
-            }
-            ticksDelta = ticksA - ticksB;
-            if (ticksDelta > TICK_RATE) {
-                ticksB = ticksA;
-                update();
-                render();
-            }
-            
-        }
     }
-
+    else {
+        run();
+    }
     close();
     return 0;
 }

@@ -1,25 +1,30 @@
 #ifndef MATERIALS_H
 #define MATERIALS_H
 
-#include "consts.h"
-#include <string>
-
-using namespace std;
+#include "RNG.h"
 
 enum Material {
     NONE,
     SAND,
-    GRAVEL,
-    STONE
+    GRAVEL
 };
 
-struct materials
+struct Color {
+    int r;
+    int g;
+    int b;
+};
+
+struct Materials_struct
 {
-    string name;
-    Material material;
-    double density;
+    bool* noice;
+    int cell_size;
+    int brush_size;
     double friction;
     int velocity;
+    Color color;
+    Materials_struct(Material);
+    ~Materials_struct();
 };
 
 #endif
