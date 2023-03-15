@@ -1,8 +1,6 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
-#include <map>
-
 #include "materials.h"
 
 const int SCREEN_WIDTH = 640;
@@ -16,8 +14,4 @@ const int GRID_HEIGHT = SCREEN_HEIGHT / GRID_CELL_SIZE;
 
 Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
-std::map<Material, Materials_struct> materials = {
-    {SAND, Materials_struct(SAND)},
-    {GRAVEL, Materials_struct(GRAVEL)}
-};
 #endif

@@ -26,7 +26,6 @@ bool init() {
         cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << endl;
         return false;
     }
-
     return true;
 }
 
@@ -36,44 +35,96 @@ void close() {
     window = NULL;
     renderer = NULL;
     SDL_Quit();
+    RNG::free_instance();
+    Materials_struct::free_instance();
+}
+
+bool left_update(int width, int height, Material mat) {
+    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
+    int height_mod = 1;
+
+    if (mat_struct->liquid) {
+        height_mod = 0;
+    }
+    else if (height == GRID_HEIGHT - 1) {
+        return false;
+    }
+
+    int velocity = RNG::get_int(1, mat_struct->velocity);
+        if (width - velocity < 0) {
+            return false;
+        }
+    if (grid[width - velocity][height + height_mod] == NONE) {
+        grid[width - velocity][height + height_mod] = mat;
+        grid[width][height] = NONE;
+        return true;
+    }
+    return false;
+}
+
+bool right_update(int width, int height, Material mat) {
+    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
+    int height_mod = 1;
+
+    if (mat_struct->liquid) {
+        height_mod = 0;
+    }
+    else if (height == GRID_HEIGHT - 1) {
+        return false;
+    }
+    
+    int velocity = RNG::get_int(1, mat_struct->velocity);
+        if (width + velocity > GRID_WIDTH - 1) {
+            return false;
+        }
+    if (grid[width + velocity][height + height_mod] == NONE) {
+        grid[width + velocity][height + height_mod] = mat;
+        grid[width][height] = NONE;
+        return true;
+    } 
+    return false;
 }
 
 void update() {
-
-    int velocity = 0;
-
+    int count = 0;
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] == SAND) {
-                if (height == GRID_HEIGHT - 1) {
-                    continue;
+            if (grid[width][height] != NONE) {
+                count++;
+                Material mat = grid[width][height], mat_place;
+                if (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER))) {
+                    mat_place = grid[width][height + 1];
+                    grid[width][height + 1] = mat;
+                    grid[width][height] = mat_place;
                 }
-                if (grid[width][height + 1] == NONE) {
-                    grid[width + velocity][height + 1] = SAND;
-                    grid[width][height] = NONE;
-                } else if (grid[width + 1][height + 1] == NONE) {
-                    grid[width + 1][height + 1] = SAND;
-                    grid[width][height] = NONE;
-                } else if (grid[width - 1][height + 1] == NONE) {
-                    grid[width - 1][height + 1] = SAND;
-                    grid[width][height] = NONE;
+                else if (RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
+                    if (RNG::get_bool()) {
+                        if (!left_update(width, height, mat)) {
+                            right_update(width, height, mat);
+                        }
+                    }
+                    else {
+                        if (!right_update(width, height, mat)) {
+                            left_update(width, height, mat);
+                        }
+                    }
                 }
-
-
             }
         }
     }
+    cout << count << endl;
 }
 
 void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-
+    Materials_struct* mat;
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] == SAND) {
+            if (grid[width][height] != NONE) {
+                mat = Materials_struct::get_instance(grid[width][height]);
                 SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
-                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
+                SDL_SetRenderDrawColor(renderer, mat->color.r, mat->color.g, mat->color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
             }
         }
@@ -120,6 +171,9 @@ void run() {
                             break;
                         case SDLK_2:
                             mat = GRAVEL;
+                            break;
+                        case SDLK_3:
+                            mat = WATER;
                             break;
                         default:
                             break;
