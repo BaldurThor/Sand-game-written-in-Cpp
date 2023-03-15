@@ -1,13 +1,15 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-#include "RNG.h"
-#include "materials.h"
 #include "consts.h"
+#include "materials.h"
 
 using namespace std;
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
+bool scan_direction = true;
+
+Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
 bool init() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -85,31 +87,43 @@ bool right_update(int width, int height, Material mat) {
     return false;
 }
 
-void update() {
-    for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
-        for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] != NONE) {
-                Material mat = grid[width][height], mat_place;
-                if (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER))) {
-                    mat_place = grid[width][height + 1];
-                    grid[width][height + 1] = mat;
-                    grid[width][height] = mat_place;
+void update_helper(int width, int height) {
+    if (grid[width][height] != NONE) {
+        Material mat = grid[width][height], mat_place;
+        if (mat != WALL && (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER)))) {
+            mat_place = grid[width][height + 1];
+            grid[width][height + 1] = mat;
+            grid[width][height] = mat_place;
+        }
+        else if (mat != WALL && RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
+            if (RNG::get_bool()) {
+                if (!left_update(width, height, mat)) {
+                    right_update(width, height, mat);
                 }
-                else if (RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
-                    if (RNG::get_bool()) {
-                        if (!left_update(width, height, mat)) {
-                            right_update(width, height, mat);
-                        }
-                    }
-                    else {
-                        if (!right_update(width, height, mat)) {
-                            left_update(width, height, mat);
-                        }
-                    }
+            }
+            else {
+                if (!right_update(width, height, mat)) {
+                    left_update(width, height, mat);
                 }
             }
         }
     }
+}
+
+void update() {
+    for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
+        if (scan_direction) {
+            for (int width = 0; width < GRID_WIDTH; width++) {
+                update_helper(width, height);
+            }
+        }
+        else {
+            for (int width = GRID_WIDTH - 1; width >= 0; width--) {
+                update_helper(width, height);
+            }
+        }
+    }
+    scan_direction = !scan_direction;
 }
 
 void render() {
@@ -171,6 +185,9 @@ void run() {
                             break;
                         case SDLK_3:
                             mat = WATER;
+                            break;
+                        case SDLK_4:
+                            mat = WALL;
                             break;
                         default:
                             break;

@@ -2,13 +2,7 @@
 #define MATERIALS_H
 
 #include "RNG.h"
-
-enum Material {
-    NONE,
-    SAND,
-    GRAVEL,
-    WATER
-};
+#include "consts.h"
 
 struct Color {
     int r;
@@ -22,11 +16,9 @@ struct Materials_struct
     static Materials_struct* gravel;
     static Materials_struct* water;
     static Materials_struct* none;
+    static Materials_struct* wall;
     bool* noice;
     bool liquid;
-    bool direction;
-    int cell_size;
-    int brush_size;
     double friction;
     int velocity;
     Color color;
