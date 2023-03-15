@@ -1,11 +1,19 @@
 #include "RNG.h"
 
+#include <iostream>
+
 RNG* RNG::instance = NULL;
 
 void RNG::get_instance() {
     if (instance == NULL) {
         instance = new RNG();
         srand (time(NULL));
+    }
+}
+
+void RNG::free_instance() {
+    if (instance != NULL) {
+        delete instance;
     }
 }
 
@@ -25,4 +33,22 @@ bool* RNG::get_noice(int size, double density) {
         noice[i] = rand() % 2;
     }
     return noice;
+}
+
+bool RNG::get_bool() {
+    if (instance == NULL) {
+        get_instance();
+    }
+    return rand() % 2;
+}
+
+bool RNG::get_bool(double factor) {
+    if (factor == 0) {
+        return true;
+    }
+    if (instance == NULL) {
+        get_instance();
+    }
+    double X=((double)rand()/(double)RAND_MAX);
+    return X < factor;
 }

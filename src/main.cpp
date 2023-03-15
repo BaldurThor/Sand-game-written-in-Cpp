@@ -6,14 +6,6 @@
 
 using namespace std;
 
-struct Pixel {
-    int x, y;
-    int vx, vy;
-    Material material;
-};
-
-Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
-
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
@@ -34,7 +26,6 @@ bool init() {
         cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << endl;
         return false;
     }
-
     return true;
 }
 
@@ -44,31 +35,77 @@ void close() {
     window = NULL;
     renderer = NULL;
     SDL_Quit();
+    RNG::free_instance();
+    Materials_struct::free_instance();
+}
+
+bool left_update(int width, int height, Material mat) {
+    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
+    int height_mod = 1;
+
+    if (mat_struct->liquid) {
+        height_mod = 0;
+    }
+    else if (height == GRID_HEIGHT - 1) {
+        return false;
+    }
+
+    int velocity = RNG::get_int(1, mat_struct->velocity);
+        if (width - velocity < 0) {
+            return false;
+        }
+    if (grid[width - velocity][height + height_mod] == NONE) {
+        grid[width - velocity][height + height_mod] = mat;
+        grid[width][height] = NONE;
+        return true;
+    }
+    return false;
+}
+
+bool right_update(int width, int height, Material mat) {
+    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
+    int height_mod = 1;
+
+    if (mat_struct->liquid) {
+        height_mod = 0;
+    }
+    else if (height == GRID_HEIGHT - 1) {
+        return false;
+    }
+    
+    int velocity = RNG::get_int(1, mat_struct->velocity);
+        if (width + velocity > GRID_WIDTH - 1) {
+            return false;
+        }
+    if (grid[width + velocity][height + height_mod] == NONE) {
+        grid[width + velocity][height + height_mod] = mat;
+        grid[width][height] = NONE;
+        return true;
+    } 
+    return false;
 }
 
 void update() {
-    bool isFalling;
-
     for (int height = GRID_HEIGHT - 1; height >= 0; height--) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] == SAND) {
-                int vel = RNG::get_int(1, 2); // generate a random velocity for the sand particle
-                if (height == GRID_HEIGHT - 1) {
-                    isFalling = false;
-                    continue;
+            if (grid[width][height] != NONE) {
+                Material mat = grid[width][height], mat_place;
+                if (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER))) {
+                    mat_place = grid[width][height + 1];
+                    grid[width][height + 1] = mat;
+                    grid[width][height] = mat_place;
                 }
-                if (grid[width][height + 1] == NONE) {
-                    grid[width][height + 1] = SAND;
-                    grid[width][height] = NONE;
-                    isFalling = true;
-                } else if (grid[width + vel][height + 1] == NONE && isFalling) {
-                    grid[width + vel][height + 1] = SAND;
-                    grid[width][height] = NONE;
-                    isFalling = false;
-                } else if (grid[width - vel][height + 1] == NONE && isFalling) {
-                    grid[width - vel][height + 1] = SAND;
-                    grid[width][height] = NONE;
-                    isFalling = false;
+                else if (RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
+                    if (RNG::get_bool()) {
+                        if (!left_update(width, height, mat)) {
+                            right_update(width, height, mat);
+                        }
+                    }
+                    else {
+                        if (!right_update(width, height, mat)) {
+                            left_update(width, height, mat);
+                        }
+                    }
                 }
             }
         }
@@ -78,12 +115,13 @@ void update() {
 void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-
+    Materials_struct* mat;
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] == SAND) {
+            if (grid[width][height] != NONE) {
+                mat = Materials_struct::get_instance(grid[width][height]);
                 SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
-                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
+                SDL_SetRenderDrawColor(renderer, mat->color.r, mat->color.g, mat->color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
             }
         }
@@ -94,7 +132,6 @@ void render() {
 
 void fill(int x, int y, Material state) {
     int brush_size = BRUSH_SIZE / 2;
-    bool* noice = RNG::get_noice(BRUSH_SIZE, 0.0);
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
@@ -102,42 +139,71 @@ void fill(int x, int y, Material state) {
             }
         }
     }
-    delete noice;
+}
+
+void run() {
+    Uint64 ticksA = 0, ticksB = 0, ticksDelta;
+    bool quit = false, mousePressed = false;
+    SDL_Event e;
+    Material mat = SAND;
+    int x, y;
+
+    while (!quit) {
+        ticksA = SDL_GetTicks();
+        while (SDL_PollEvent(&e) != 0) {
+            switch(e.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    mousePressed = true;
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    mousePressed = false;
+                    break;
+                case SDL_KEYDOWN:
+                    switch (e.key.keysym.sym) {
+                        case SDLK_1:
+                            mat = SAND;
+                            break;
+                        case SDLK_2:
+                            mat = GRAVEL;
+                            break;
+                        case SDLK_3:
+                            mat = WATER;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (mousePressed) {
+            if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                fill(x, y, mat);
+            }
+            else {
+                fill(x, y, NONE);
+            }
+        }
+        ticksDelta = ticksA - ticksB;
+        if (ticksDelta > TICK_RATE) {
+            ticksB = ticksA;
+            update();
+            render();
+        }
+    }
 }
 
 int main(int argc, char* argv[])
 {
     if (!init()) {
         cout << "Failed to initialize!" << endl;
-    } else {
-        Uint64 ticksA = 0, ticksB = 0, ticksDelta;
-        bool quit = false;
-        SDL_Event e;
-        int x, y;
-
-        while (!quit) {
-            ticksA = SDL_GetTicks();
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type == SDL_QUIT) {
-                    quit = true;
-                } 
-                /*else if (e.type == SDL_MOUSEBUTTONDOWN) {
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE] = SAND;
-                }*/
-            }
-            if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                fill(x, y, SAND);
-            }
-            ticksDelta = ticksA - ticksB;
-            if (ticksDelta > TICK_RATE / 2) {
-                ticksB = ticksA;
-                update();
-                render();
-            }
-            
-        }
+    }
+    else {
+        run();
     }
     close();
     return 0;
