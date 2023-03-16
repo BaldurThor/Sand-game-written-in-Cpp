@@ -30,8 +30,8 @@ struct Materials_struct
     static Materials_struct* none;
     static Materials_struct* wall;
     bool* noise;
-    bool liquid;
-    bool immovable;
+    bool liquid = false;
+    bool immovable = false;
     double friction;
     int velocity;
     int weight;

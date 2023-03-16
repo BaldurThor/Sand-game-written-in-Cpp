@@ -15,8 +15,6 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 sand->friction = 0.2;
                 sand->velocity = 3;
                 sand->color = { 167, 123, 91 };
-                sand->liquid = false;
-                sand->immovable = false;
                 sand->weight = 2;
             }
             return sand;
@@ -27,8 +25,6 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 gravel->friction = 0.8;
                 gravel->velocity = 1;
                 gravel->color = { 134, 129, 136 };
-                gravel->liquid = false;
-                gravel->immovable = false;
                 gravel->weight = 3;
             }
             return gravel;
@@ -40,7 +36,6 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 water->velocity = 5;
                 water->color = { 75, 128, 202 };
                 water->liquid = true;
-                water->immovable = false;
                 water->weight = 1;
             }
             return water;
@@ -51,7 +46,6 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 wall->friction = 1;
                 wall->velocity = 0;
                 wall->color = { 69, 68, 79 };
-                wall->liquid = false;
                 wall->immovable = true;
                 wall->weight = __INT_MAX__;
             }
@@ -63,7 +57,6 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 none->friction = 0;
                 none->velocity = 0;
                 none->color = { 0, 0, 0 };
-                none->liquid = false;
                 none->immovable = true;
                 none->weight = 0;
             }
