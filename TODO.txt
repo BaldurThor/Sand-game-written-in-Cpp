@@ -2,6 +2,7 @@ TODO:
     -Random noice for the color in the materials.
     -Try some kind of noice for the color of the materials, like vornoi or somthing.
     -Materials have weight so that ex. stone gets buried under sand and sand or stone go under water.
+    -LAGA LEKA -------BUIÐ
     -UI
     -Better color scheme for the background.
     -Brush. Make it a circle with noise so its more scattered.

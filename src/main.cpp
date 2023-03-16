@@ -55,13 +55,21 @@ void close() {
     Materials_struct::free_instance();
 }
 
-void draw_text(const char *text) {
-    TTF_Font *font = TTF_OpenFont("dogica.ttf", 16);
+void reset_grid() {
+    for (int i = 0; i < GRID_WIDTH; i++) {
+        for (int j = 0; j < GRID_HEIGHT; j++) {
+            grid[i][j] = { NONE };
+        }
+    }
+}
+
+void draw_text(const char *text, int posx, int posy, int size, Color color) {
+    TTF_Font *font = TTF_OpenFont("dogica.ttf", size);
     if (font == NULL) {
         cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << endl;
         return;
     }
-    SDL_Color textColor = { 0, 0, 0 };
+    SDL_Color textColor = { color.r, color.g, color.b };
     SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
     if (textSurface == NULL) {
         cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << endl;
@@ -72,11 +80,15 @@ void draw_text(const char *text) {
         cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << endl;
         return;
     }
-    SDL_Rect textRect = { 0, 0, textSurface->w, textSurface->h };
+    SDL_Rect textRect = { posx, posy, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
     TTF_CloseFont(font);
+}
+
+void draw_text(const char *text, int posx, int posy) {
+    draw_text(text, posx, posy, 16, { 0, 0, 0 });
 }
 
 bool update_move(int width, int height, Pixle pixle, int velocity, int height_mod) {
@@ -196,7 +208,9 @@ void render() {
         }
     }
 
-    draw_text(header);
+    draw_text(header, 4, 4);
+    draw_text("Press R to reset", 4, SCREEN_HEIGHT - 12, 12, { 0, 0, 0 });
+    draw_text(BRUSH_SIZE, SCREEN_WIDTH - 12, 4, 12, { 0, 0, 0 });
     SDL_RenderPresent(renderer);
 }
 
@@ -271,6 +285,10 @@ void run() {
                         case SDLK_4:
                             mat = WALL;
                             header = wall_header;
+                            break;
+                        case SDLK_r:
+                            cout << "Resetting grid..." << endl;
+                            reset_grid();
                             break;
                         default:
                             break;

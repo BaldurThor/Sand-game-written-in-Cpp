@@ -3,11 +3,12 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <stdint.h>
 
 struct Color {
-    int r;
-    int g;
-    int b;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
 };
 
 class RNG {
