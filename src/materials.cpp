@@ -11,56 +11,70 @@ Materials_struct* Materials_struct::get_instance(Material material) {
         case SAND:
             if (sand == NULL) {
                 sand = new Materials_struct();
-                sand->noice = RNG::get_noice(BRUSH_SIZE, 0.5);
+                sand->noise = RNG::get_noice(BRUSH_SIZE, 0.5);
                 sand->friction = 0.2;
                 sand->velocity = 3;
                 sand->color = { 167, 123, 91 };
                 sand->liquid = false;
+                sand->immovable = false;
+                sand->weight = 2;
             }
             return sand;
         case GRAVEL:
             if (gravel == NULL) {
                 gravel = new Materials_struct();
-                gravel->noice = RNG::get_noice(BRUSH_SIZE, 0.9);
+                gravel->noise = RNG::get_noice(BRUSH_SIZE, 0.9);
                 gravel->friction = 0.8;
                 gravel->velocity = 1;
                 gravel->color = { 134, 129, 136 };
                 gravel->liquid = false;
+                gravel->immovable = false;
+                gravel->weight = 3;
             }
             return gravel;
         case WATER:
             if (water == NULL) {
                 water = new Materials_struct();
-                water->noice = RNG::get_noice(BRUSH_SIZE, 1);
+                water->noise = RNG::get_noice(BRUSH_SIZE, 1);
                 water->friction = 0;
                 water->velocity = 5;
                 water->color = { 75, 128, 202 };
                 water->liquid = true;
+                water->immovable = false;
+                water->weight = 1;
             }
             return water;
         case WALL:
             if (wall == NULL) {
                 wall = new Materials_struct();
-                wall->noice = RNG::get_noice(BRUSH_SIZE, 1);
+                wall->noise = RNG::get_noice(BRUSH_SIZE, 1);
                 wall->friction = 1;
                 wall->velocity = 0;
                 wall->color = { 69, 68, 79 };
                 wall->liquid = false;
+                wall->immovable = true;
+                wall->weight = __INT_MAX__;
             }
             return wall;
         case NONE:
             if (none == NULL) {
                 none = new Materials_struct();
-                none->noice = RNG::get_noice(BRUSH_SIZE, 1);
+                none->noise = RNG::get_noice(BRUSH_SIZE, 1);
                 none->friction = 0;
                 none->velocity = 0;
                 none->color = { 0, 0, 0 };
                 none->liquid = false;
+                none->immovable = true;
+                none->weight = 0;
             }
             return none;
         default:
             return NULL;
     }
+}
+
+Materials_struct* Materials_struct::get_instance(Pixle pixle) {
+    return get_instance(pixle.material);
 }
 
 void Materials_struct::free_instance() {
@@ -97,8 +111,8 @@ Materials_struct::~Materials_struct() {
     if (none != NULL) {
         delete none;
     }
-    if (noice != NULL) {
-        delete noice;
+    if (noise != NULL) {
+        delete noise;
     }
     if (water != NULL) {
         delete water;
