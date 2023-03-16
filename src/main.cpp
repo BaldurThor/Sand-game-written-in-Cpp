@@ -41,6 +41,9 @@ void close() {
     Materials_struct::free_instance();
 }
 
+void draw_text() {
+}
+
 bool left_update(int width, int height, Material mat) {
     Materials_struct* mat_struct = Materials_struct::get_instance(mat);
     int height_mod = 1;
@@ -127,9 +130,11 @@ void update() {
 }
 
 void render() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 184, 181, 185, 255);
     SDL_RenderClear(renderer);
     Materials_struct* mat;
+    draw_text();
+
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height] != NONE) {
