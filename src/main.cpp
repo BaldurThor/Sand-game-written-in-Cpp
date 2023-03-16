@@ -49,7 +49,7 @@ void close() {
     Materials_struct::free_instance();
 }
 
-void draw_text(char *text) {
+void draw_text(const char *text) {
     TTF_Font *font = TTF_OpenFont("dogica.ttf", 16);
     if (font == NULL) {
         cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << endl;
@@ -173,7 +173,7 @@ void render() {
         }
     }
 
-    draw_text("SAND");
+    //draw_text("SAND");
     SDL_RenderPresent(renderer);
 }
 
