@@ -1,6 +1,5 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-#include "consts.h"
 #include "materials.h"
 #include "SDL2/SDL_ttf.h"
 
@@ -9,6 +8,13 @@ using namespace std;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool scan_direction = true;
+
+const char* sand_header = "SAND";
+const char* gravel_header = "GRAVEL";
+const char* water_header = "WATER";
+const char* wall_header = "WALL";
+
+const char* header;
 
 Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
@@ -49,7 +55,7 @@ void close() {
     Materials_struct::free_instance();
 }
 
-void draw_text(char *text) {
+void draw_text(const char *text) {
     TTF_Font *font = TTF_OpenFont("dogica.ttf", 16);
     if (font == NULL) {
         cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << endl;
@@ -190,7 +196,7 @@ void render() {
         }
     }
 
-    draw_text("SAND");
+    draw_text(header);
     SDL_RenderPresent(renderer);
 }
 
@@ -232,6 +238,7 @@ void run() {
     SDL_Event e;
     Material mat = SAND;
     int x, y, dx, dy;
+    header = sand_header;
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -251,15 +258,19 @@ void run() {
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
                             mat = SAND;
+                            header = sand_header;
                             break;
                         case SDLK_2:
                             mat = GRAVEL;
+                            header = gravel_header;
                             break;
                         case SDLK_3:
                             mat = WATER;
+                            header = water_header;
                             break;
                         case SDLK_4:
                             mat = WALL;
+                            header = wall_header;
                             break;
                         default:
                             break;
