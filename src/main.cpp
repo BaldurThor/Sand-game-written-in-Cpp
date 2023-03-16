@@ -9,7 +9,7 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool scan_direction = true;
 
-Material grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
+Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
 bool init() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -41,59 +41,69 @@ void close() {
     Materials_struct::free_instance();
 }
 
-bool update_move(int width, int height, Material mat, int velocity, int height_mod) {
+bool update_move(int width, int height, Pixle pixle, int velocity, int height_mod) {
     if ((width + velocity < 0) || (width + velocity > GRID_WIDTH - 1)) {
             return false;
     }
     if (0 < velocity) {
         for (int i = 1; i <= velocity; i++) {
-            if (grid[width + i][height + height_mod] != NONE && grid[width + i][height + height_mod] != mat) {
+            if (grid[width + i][height + height_mod] != NONE && grid[width + i][height + height_mod] != pixle) {
                 return false;
             }
         }
     }
     else {
         for (int i = -velocity; i > 0; i--) {
-            if (grid[width - i][height + height_mod] != NONE && grid[width - i][height + height_mod] != mat) {
+            if (grid[width - i][height + height_mod] != NONE && grid[width - i][height + height_mod] != pixle) {
                 return false;
             }
         }
     }
     if (grid[width + velocity][height + height_mod] == NONE) {
-        grid[width + velocity][height + height_mod] = mat;
-        grid[width][height] = NONE;
+        grid[width + velocity][height + height_mod] = pixle;
+        grid[width][height].material = NONE;
         return true;
     }
     return false;
 }
 
 void update_helper(int width, int height) {
-    if (grid[width][height] != NONE) {
-        Material mat = grid[width][height], mat_place;
-        Materials_struct* mat_struct = Materials_struct::get_instance(mat);
-        if (height == GRID_HEIGHT - 1 || mat == WALL) {
+    if (grid[width][height].material != NONE) {
+        Pixle pixle = grid[width][height];
+        Materials_struct *mat_struct = Materials_struct::get_instance(pixle);
+        if (height == GRID_HEIGHT - 1 || mat_struct->immovable) {
             return;
         }
 
-        if (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER)) {
+        Pixle other_pixle = grid[width][height + 1];
+        Materials_struct *other_mat_struct = Materials_struct::get_instance(other_pixle);
+
+        if (pixle.velocity > other_mat_struct->weight) {
+            pixle.velocity -= other_mat_struct->friction;
+            grid[width][height + 1] = pixle;
+            grid[width][height] = other_pixle;
+            return;
+        }
+
+        /*if (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER)) {
             mat_place = grid[width][height + 1];
             grid[width][height + 1] = mat;
             grid[width][height] = mat_place;
             return;
-        }
+        }*/
         int height_mod = 1;
         if (mat_struct->liquid) {
             height_mod = 0;
         }
         int velocity = RNG::get_int(1, mat_struct->velocity);
         if (scan_direction) {
-            if (!update_move(width, height, mat, velocity, height_mod)) {
-                update_move(width, height, mat, -velocity, height_mod);
+            if (!update_move(width, height, pixle, velocity, height_mod)) {
+                update_move(width, height, pixle, -velocity, height_mod);
             }
         }
         else {
-            if (!update_move(width, height, mat, -velocity, height_mod)) {
-                update_move(width, height, mat, velocity, height_mod);
+            if (!update_move(width, height, pixle, -velocity, height_mod)) {
+                update_move(width, height, pixle, velocity, height_mod);
             }
         }
     }
@@ -121,7 +131,7 @@ void render() {
     Materials_struct* mat;
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height] != NONE) {
+            if (grid[width][height].material != NONE) {
                 mat = Materials_struct::get_instance(grid[width][height]);
                 SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
                 SDL_SetRenderDrawColor(renderer, mat->color.r, mat->color.g, mat->color.b, 0xFF);
@@ -154,8 +164,10 @@ void fill(int x, int y, int dx, int dy, Material state) {
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] == NONE || state == NONE) {
-                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
+                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE) {
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
+                    //grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = somthing
                 }
             }
         }
