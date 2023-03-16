@@ -59,9 +59,10 @@ bool update_move(int width, int height, Pixle pixle, int velocity, int height_mo
             }
         }
     }
-    if (grid[width + velocity][height + height_mod] == NONE) {
+    Pixle other_pixle = grid[width + velocity][height + height_mod];
+    if (other_pixle == NONE) {
         grid[width + velocity][height + height_mod] = pixle;
-        grid[width][height].material = NONE;
+        grid[width][height] = other_pixle;
         return true;
     }
     return false;

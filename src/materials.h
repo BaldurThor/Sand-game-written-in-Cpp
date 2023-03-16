@@ -12,7 +12,7 @@ struct Color {
 
 struct Pixle {
     Material material = NONE;
-    double velocity = 0;
+    double velocity = 0; // used for weight calculations
     Color color = {0,0,0}; // for noice
     bool operator==(const Pixle& other) const {
         return material == other.material;
