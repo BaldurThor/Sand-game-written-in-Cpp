@@ -158,6 +158,20 @@ void update() {
     scan_direction = !scan_direction;
 }
 
+Color mix_colors(Color c1, Color c2) {
+    Color c;
+    c.r = (c1.r + c2.r);
+    c.g = (c1.g + c2.g);
+    c.b = (c1.b + c2.b);
+    if (c.r > 255) c.r = 255;
+    if (c.g > 255) c.g = 255;
+    if (c.b > 255) c.b = 255;
+    if (c.r < 0) c.r = 0;
+    if (c.g < 0) c.g = 0;
+    if (c.b < 0) c.b = 0;
+    return c;
+}
+
 void render() {
     SDL_SetRenderDrawColor(renderer, 242, 240, 229, 255);
     SDL_RenderClear(renderer);
@@ -165,10 +179,12 @@ void render() {
 
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height].material != NONE) {
-                mat = Materials_struct::get_instance(grid[width][height]);
+            Pixle pixle = grid[width][height];
+            if (pixle.material != NONE) {
+                mat = Materials_struct::get_instance(pixle);
                 SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
-                SDL_SetRenderDrawColor(renderer, mat->color.r, mat->color.g, mat->color.b, 0xFF);
+                Color color = mix_colors(pixle.color, mat->color);
+                SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
             }
         }
@@ -199,10 +215,10 @@ void fill(int x, int y, int dx, int dy, Material state) {
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE) {
+                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE || state == WALL) {
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
-                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = Materials_struct::get_instance(state)->color;
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = RNG::get_color();
                 }
             }
         }

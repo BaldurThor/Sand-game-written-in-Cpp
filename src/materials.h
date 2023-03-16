@@ -4,12 +4,6 @@
 #include "RNG.h"
 #include "consts.h"
 
-struct Color {
-    int r;
-    int g;
-    int b;
-};
-
 struct Pixle {
     Material material = NONE;
     double velocity = 0; // used for weight calculations

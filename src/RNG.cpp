@@ -52,3 +52,14 @@ bool RNG::get_bool(double factor) {
     double X=((double)rand()/(double)RAND_MAX);
     return X < factor;
 }
+
+Color RNG::get_color() {
+    if (instance == NULL) {
+        get_instance();
+    }
+    Color color;
+    color.r = get_int(0, 20) - 10;
+    color.g = get_int(0, 20) - 10;
+    color.b = get_int(0, 20) - 10;
+    return color;
+}
