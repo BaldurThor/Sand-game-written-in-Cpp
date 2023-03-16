@@ -2,6 +2,7 @@
 #include "SDL2/SDL.h"
 #include "consts.h"
 #include "materials.h"
+#include "SDL2/SDL_ttf.h"
 
 using namespace std;
 
@@ -28,6 +29,12 @@ bool init() {
         cout << "Renderer could not be created! SDL Error: " << SDL_GetError() << endl;
         return false;
     }
+    
+    if (TTF_Init() < 0) {
+        cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << endl;
+        return false;
+    }
+
     return true;
 }
 
@@ -36,9 +43,34 @@ void close() {
     SDL_DestroyWindow(window);
     window = NULL;
     renderer = NULL;
+    TTF_Quit();
     SDL_Quit();
     RNG::free_instance();
     Materials_struct::free_instance();
+}
+
+void draw_text(char *text) {
+    TTF_Font *font = TTF_OpenFont("dogica.ttf", 16);
+    if (font == NULL) {
+        cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << endl;
+        return;
+    }
+    SDL_Color textColor = { 0, 0, 0 };
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, textColor);
+    if (textSurface == NULL) {
+        cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << endl;
+        return;
+    }
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (textTexture == NULL) {
+        cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError() << endl;
+        return;
+    }
+    SDL_Rect textRect = { 0, 0, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(font);
 }
 
 bool update_move(int width, int height, Pixle pixle, int velocity, int height_mod) {
@@ -127,9 +159,10 @@ void update() {
 }
 
 void render() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 242, 240, 229, 255);
     SDL_RenderClear(renderer);
     Materials_struct* mat;
+
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
             if (grid[width][height].material != NONE) {
@@ -141,6 +174,7 @@ void render() {
         }
     }
 
+    draw_text("SAND");
     SDL_RenderPresent(renderer);
 }
 
@@ -168,7 +202,7 @@ void fill(int x, int y, int dx, int dy, Material state) {
                 if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE) {
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
-                    //grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = somthing
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = Materials_struct::get_instance(state)->color;
                 }
             }
         }
@@ -177,7 +211,8 @@ void fill(int x, int y, int dx, int dy, Material state) {
 
 void run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
-    bool quit = false, mousePressed = false;
+    bool quit = false;
+    bool mousePressed = false;
     SDL_Event e;
     Material mat = SAND;
     int x, y, dx, dy;
@@ -239,8 +274,7 @@ void run() {
     }
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* args[]) {
     if (!init()) {
         cout << "Failed to initialize!" << endl;
     }

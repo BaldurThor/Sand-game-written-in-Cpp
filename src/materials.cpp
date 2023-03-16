@@ -14,7 +14,7 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 sand->noise = RNG::get_noice(BRUSH_SIZE, 0.5);
                 sand->friction = 0.2;
                 sand->velocity = 3;
-                sand->color = { 255, 255, 0 };
+                sand->color = { 167, 123, 91 };
                 sand->liquid = false;
                 sand->immovable = false;
                 sand->weight = 2;
@@ -26,7 +26,7 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 gravel->noise = RNG::get_noice(BRUSH_SIZE, 0.9);
                 gravel->friction = 0.8;
                 gravel->velocity = 1;
-                gravel->color = { 128, 128, 128 };
+                gravel->color = { 134, 129, 136 };
                 gravel->liquid = false;
                 gravel->immovable = false;
                 gravel->weight = 3;
@@ -38,7 +38,7 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 water->noise = RNG::get_noice(BRUSH_SIZE, 1);
                 water->friction = 0;
                 water->velocity = 5;
-                water->color = { 0, 0, 255 };
+                water->color = { 75, 128, 202 };
                 water->liquid = true;
                 water->immovable = false;
                 water->weight = 1;
@@ -50,7 +50,7 @@ Materials_struct* Materials_struct::get_instance(Material material) {
                 wall->noise = RNG::get_noice(BRUSH_SIZE, 1);
                 wall->friction = 1;
                 wall->velocity = 0;
-                wall->color = { 255, 255, 255 };
+                wall->color = { 69, 68, 79 };
                 wall->liquid = false;
                 wall->immovable = true;
                 wall->weight = __INT_MAX__;

@@ -10,7 +10,7 @@ INCLUDE_PATHS = -Iinclude
 LIBRARY_PATHS = -Llib
 
 COMPILER_FLAGS = -Wall#-w -Wl,-subsystem,windows
-LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2
+LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2_ttf -lSDL2
 
 OBJ_NAME = build/sand.exe
 
