@@ -188,7 +188,7 @@ void render() {
             Pixle pixle = grid[width][height];
             if (pixle.material != NONE) {
                 mat = Materials_struct::get_instance(pixle);
-                SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
+                SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE + SCREEN_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE};
                 Color color = mix_colors(pixle.color, mat->color);
                 SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
@@ -220,7 +220,7 @@ void fill(int x, int y, int dx, int dy, Material state) {
     int brush_size = BRUSH_SIZE / 2;
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
-            if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
+            if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT - (2 * SCREEN_PADDING) && xi >= 0 && yi >= 0) {
                 if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE || state == WALL) {
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
@@ -282,11 +282,13 @@ void run() {
         }
         if (mousePressed) {
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                y -= SCREEN_PADDING;
                 fill(x, y, dx, dy, mat);
                 dx = x;
                 dy = y;
             }
             else {
+                y -= SCREEN_PADDING;
                 fill(x, y, dx ,dy, NONE);
                 dx = x;
                 dy = y;
