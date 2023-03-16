@@ -41,70 +41,59 @@ void close() {
     Materials_struct::free_instance();
 }
 
-bool left_update(int width, int height, Material mat) {
-    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
-    int height_mod = 1;
-
-    if (mat_struct->liquid) {
-        height_mod = 0;
-    }
-    else if (height == GRID_HEIGHT - 1) {
-        return false;
-    }
-
-    int velocity = RNG::get_int(1, mat_struct->velocity);
-        if (width - velocity < 0) {
+bool update_move(int width, int height, Material mat, int velocity, int height_mod) {
+    if ((width + velocity < 0) || (width + velocity > GRID_WIDTH - 1)) {
             return false;
+    }
+    if (0 < velocity) {
+        for (int i = 1; i <= velocity; i++) {
+            if (grid[width + i][height + height_mod] != NONE && grid[width + i][height + height_mod] != mat) {
+                return false;
+            }
         }
-    if (grid[width - velocity][height + height_mod] == NONE) {
-        grid[width - velocity][height + height_mod] = mat;
-        grid[width][height] = NONE;
-        return true;
     }
-    return false;
-}
-
-bool right_update(int width, int height, Material mat) {
-    Materials_struct* mat_struct = Materials_struct::get_instance(mat);
-    int height_mod = 1;
-
-    if (mat_struct->liquid) {
-        height_mod = 0;
-    }
-    else if (height == GRID_HEIGHT - 1) {
-        return false;
-    }
-    
-    int velocity = RNG::get_int(1, mat_struct->velocity);
-        if (width + velocity > GRID_WIDTH - 1) {
-            return false;
+    else {
+        for (int i = -velocity; i > 0; i--) {
+            if (grid[width - i][height + height_mod] != NONE && grid[width - i][height + height_mod] != mat) {
+                return false;
+            }
         }
+    }
     if (grid[width + velocity][height + height_mod] == NONE) {
         grid[width + velocity][height + height_mod] = mat;
         grid[width][height] = NONE;
         return true;
-    } 
+    }
     return false;
 }
 
 void update_helper(int width, int height) {
     if (grid[width][height] != NONE) {
         Material mat = grid[width][height], mat_place;
-        if (mat != WALL && (height != GRID_HEIGHT - 1 && (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER)))) {
+        Materials_struct* mat_struct = Materials_struct::get_instance(mat);
+        if (height == GRID_HEIGHT - 1 || mat == WALL) {
+            return;
+        }
+
+        if (grid[width][height + 1] == NONE || (mat != WATER && grid[width][height + 1] == WATER)) {
             mat_place = grid[width][height + 1];
             grid[width][height + 1] = mat;
             grid[width][height] = mat_place;
+            return;
         }
-        else if (mat != WALL && RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
-            if (RNG::get_bool()) {
-                if (!left_update(width, height, mat)) {
-                    right_update(width, height, mat);
-                }
+        int height_mod = 1;
+        if (mat_struct->liquid) {
+            height_mod = 0;
+        }
+        int velocity = RNG::get_int(1, mat_struct->velocity);
+        if (scan_direction) {
+            if (!update_move(width, height, mat, velocity, height_mod)) {
+                update_move(width, height, mat, -velocity, height_mod);
             }
-            else {
-                if (!right_update(width, height, mat)) {
-                    left_update(width, height, mat);
-                }
+        }
+        else {
+            if (!update_move(width, height, mat, -velocity, height_mod)) {
+                update_move(width, height, mat, velocity, height_mod);
             }
         }
     }
@@ -144,12 +133,30 @@ void render() {
     SDL_RenderPresent(renderer);
 }
 
-void fill(int x, int y, Material state) {
+void fill(int x, int y, int dx, int dy, Material state) {
+    /*
+    if (dx < x) {
+        int temp = x;
+        x = dx;
+        dx = temp;
+    }
+    if (dy < y) {
+        int temp = y;
+        y = dy;
+        dy = temp;
+    }
+    bool sml_grid[dx-x][dy-y] = { false };
+    int ddx = dx - x;
+    int ddy = dy - y;
+    */
+
     int brush_size = BRUSH_SIZE / 2;
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
+                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] == NONE || state == NONE) {
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE] = state;
+                }
             }
         }
     }
@@ -160,7 +167,7 @@ void run() {
     bool quit = false, mousePressed = false;
     SDL_Event e;
     Material mat = SAND;
-    int x, y;
+    int x, y, dx, dy;
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -171,6 +178,7 @@ void run() {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
+                    SDL_GetMouseState(&dx, &dy);
                     break;
                 case SDL_MOUSEBUTTONUP:
                     mousePressed = false;
@@ -199,10 +207,14 @@ void run() {
         }
         if (mousePressed) {
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                fill(x, y, mat);
+                fill(x, y, dx, dy, mat);
+                dx = x;
+                dy = y;
             }
             else {
-                fill(x, y, NONE);
+                fill(x, y, dx ,dy, NONE);
+                dx = x;
+                dy = y;
             }
         }
         ticksDelta = ticksA - ticksB;
