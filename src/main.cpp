@@ -95,7 +95,7 @@ void update() {
                     grid[width][height + 1] = mat;
                     grid[width][height] = mat_place;
                 }
-                else if (RNG::get_bool(Materials_struct::get_instance(mat)->friction)){
+                else if (RNG::get_bool(Materials_struct::get_instance(mat)->friction)) {
                     if (RNG::get_bool()) {
                         if (!left_update(width, height, mat)) {
                             right_update(width, height, mat);
@@ -143,7 +143,8 @@ void fill(int x, int y, Material state) {
 
 void run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
-    bool quit = false, mousePressed = false;
+    bool quit = false;
+    bool mousePressed = false;
     SDL_Event e;
     Material mat = SAND;
     int x, y;
@@ -184,9 +185,6 @@ void run() {
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
                 fill(x, y, mat);
             }
-            else {
-                fill(x, y, NONE);
-            }
         }
         ticksDelta = ticksA - ticksB;
         if (ticksDelta > TICK_RATE) {
@@ -197,8 +195,7 @@ void run() {
     }
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* args[]) {
     if (!init()) {
         cout << "Failed to initialize!" << endl;
     }
