@@ -4,15 +4,9 @@
 #include "RNG.h"
 #include "consts.h"
 
-struct Color {
-    int r;
-    int g;
-    int b;
-};
-
 struct Pixle {
     Material material = NONE;
-    double velocity = 0;
+    double velocity = 0; // used for weight calculations
     Color color = {0,0,0}; // for noice
     bool operator==(const Pixle& other) const {
         return material == other.material;
@@ -36,8 +30,8 @@ struct Materials_struct
     static Materials_struct* none;
     static Materials_struct* wall;
     bool* noise;
-    bool liquid;
-    bool immovable;
+    bool liquid = false;
+    bool immovable = false;
     double friction;
     int velocity;
     int weight;

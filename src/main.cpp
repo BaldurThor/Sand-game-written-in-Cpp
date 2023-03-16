@@ -1,6 +1,5 @@
 #include <iostream>
 #include "SDL2/SDL.h"
-#include "consts.h"
 #include "materials.h"
 #include "SDL2/SDL_ttf.h"
 
@@ -9,6 +8,13 @@ using namespace std;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 bool scan_direction = true;
+
+const char* sand_header = "SAND";
+const char* gravel_header = "GRAVEL";
+const char* water_header = "WATER";
+const char* wall_header = "WALL";
+
+const char* header;
 
 Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
 
@@ -91,9 +97,10 @@ bool update_move(int width, int height, Pixle pixle, int velocity, int height_mo
             }
         }
     }
-    if (grid[width + velocity][height + height_mod] == NONE) {
+    Pixle other_pixle = grid[width + velocity][height + height_mod];
+    if (other_pixle == NONE) {
         grid[width + velocity][height + height_mod] = pixle;
-        grid[width][height].material = NONE;
+        grid[width][height] = other_pixle;
         return true;
     }
     return false;
@@ -157,6 +164,20 @@ void update() {
     scan_direction = !scan_direction;
 }
 
+Color mix_colors(Color c1, Color c2) {
+    Color c;
+    c.r = (c1.r + c2.r);
+    c.g = (c1.g + c2.g);
+    c.b = (c1.b + c2.b);
+    if (c.r > 255) c.r = 255;
+    if (c.g > 255) c.g = 255;
+    if (c.b > 255) c.b = 255;
+    if (c.r < 0) c.r = 0;
+    if (c.g < 0) c.g = 0;
+    if (c.b < 0) c.b = 0;
+    return c;
+}
+
 void render() {
     SDL_SetRenderDrawColor(renderer, 242, 240, 229, 255);
     SDL_RenderClear(renderer);
@@ -164,16 +185,18 @@ void render() {
 
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
-            if (grid[width][height].material != NONE) {
-                mat = Materials_struct::get_instance(grid[width][height]);
+            Pixle pixle = grid[width][height];
+            if (pixle.material != NONE) {
+                mat = Materials_struct::get_instance(pixle);
                 SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE};
-                SDL_SetRenderDrawColor(renderer, mat->color.r, mat->color.g, mat->color.b, 0xFF);
+                Color color = mix_colors(pixle.color, mat->color);
+                SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
             }
         }
     }
 
-    //draw_text("SAND");
+    draw_text(header);
     SDL_RenderPresent(renderer);
 }
 
@@ -198,10 +221,10 @@ void fill(int x, int y, int dx, int dy, Material state) {
     for (int xi = x - brush_size; xi < x + brush_size; xi++) {
         for (int yi = y - brush_size; yi < y + brush_size; yi++) {
             if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT && xi >= 0 && yi >= 0) {
-                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE) {
+                if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE || state == WALL) {
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
                     grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
-                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = Materials_struct::get_instance(state)->color;
+                    grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color = RNG::get_color();
                 }
             }
         }
@@ -215,6 +238,7 @@ void run() {
     SDL_Event e;
     Material mat = SAND;
     int x, y, dx, dy;
+    header = sand_header;
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -234,15 +258,19 @@ void run() {
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
                             mat = SAND;
+                            header = sand_header;
                             break;
                         case SDLK_2:
                             mat = GRAVEL;
+                            header = gravel_header;
                             break;
                         case SDLK_3:
                             mat = WATER;
+                            header = water_header;
                             break;
                         case SDLK_4:
                             mat = WALL;
+                            header = wall_header;
                             break;
                         default:
                             break;
