@@ -91,6 +91,14 @@ void draw_text(const char *text, int posx, int posy) {
     draw_text(text, posx, posy, 16, { 0, 0, 0 });
 }
 
+void draw_text(const int text, int posx, int posy) {
+    draw_text(to_string(text).c_str(), posx, posy, 16, { 0, 0, 0 });
+}
+
+void draw_text(const int text, int posx, int posy, int size, Color color) {
+    draw_text(to_string(text).c_str(), posx, posy, size, color);
+}
+
 bool update_move(int width, int height, Pixle pixle, int velocity, int height_mod) {
     if ((width + velocity < 0) || (width + velocity > GRID_WIDTH - 1)) {
             return false;
