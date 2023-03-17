@@ -12,7 +12,7 @@ LIBRARY_PATHS = -Llib
 COMPILER_FLAGS = -Wall#-w -Wl,-subsystem,windows
 LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2_ttf -lSDL2
 
-OBJ_NAME = build/sand.exe
+OBJ_NAME = bin/sand.exe
 
 all:
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)

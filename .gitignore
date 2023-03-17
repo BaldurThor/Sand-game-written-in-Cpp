@@ -1,2 +1,2 @@
 .vscode
-build/*.exe
+bin/*.exe
