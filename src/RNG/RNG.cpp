@@ -48,7 +48,7 @@ bool RNG::get_bool() {
     if (instance == NULL) {
         get_instance();
     }
-    return rand() % 2;
+    return rand() > (RAND_MAX / 2);
 }
 
 bool RNG::get_bool(double factor) {
@@ -59,7 +59,7 @@ bool RNG::get_bool(double factor) {
         get_instance();
     }
     double X=((double)rand()/(double)RAND_MAX);
-    return X < factor;
+    return X > factor;
 }
 
 ColorNoise RNG::get_color_noise() {
