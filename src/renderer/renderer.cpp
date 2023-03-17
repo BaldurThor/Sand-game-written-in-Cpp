@@ -20,6 +20,7 @@ Renderer::Renderer() {
     if (TTF_Init() < 0) {
         throw runtime_error(string("SDL_ttf could not initialize! SDL_ttf Error: ") + SDL_GetError());
     }
+    SDL_ShowCursor(SDL_DISABLE);
 }
 
 Renderer::~Renderer() {
