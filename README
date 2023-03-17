@@ -1,4 +1,12 @@
-#To build: 
+# To build:
+
+    ```bash
     make
-#To run:
-    ./build/sand.exe
+    ```
+
+# To run:
+
+    ```bash
+    ./bin/sand.exe
+    ```
+    

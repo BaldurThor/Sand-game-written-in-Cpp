@@ -1,5 +1,5 @@
 #All the object files that need to be compiled
-OBJS := main.cpp materials.cpp RNG.cpp
+OBJS := main.cpp RNG/RNG.cpp renderer/gridOperations.cpp renderer/render.cpp renderer/renderer.cpp renderer/run.cpp renderer/update.cpp materials/materialsStruct.cpp materials/pixle.cpp color/colorMixer.cpp
 
 SRC_DIR := ./src/
 OBJS := $(addprefix $(SRC_DIR), $(OBJS))

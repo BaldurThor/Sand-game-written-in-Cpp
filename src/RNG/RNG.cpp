@@ -1,7 +1,5 @@
 #include "RNG.h"
 
-#include <iostream>
-
 RNG* RNG::instance = NULL;
 
 void RNG::get_instance() {
@@ -17,14 +15,25 @@ void RNG::free_instance() {
     }
 }
 
+int RNG::get_neg_int(int min, int max) {
+    if (instance == NULL) {
+        get_instance();
+    }
+    max = max + (min * -1);
+    return get_int(0, max) + min;
+}
+
 int RNG::get_int(int min, int max) {
     if (instance == NULL) {
         get_instance();
     }
+    if (min < 0) {
+        return instance->get_neg_int(min, max);
+    }
     return rand() % (max - min + 1) + min;
 }
 
-bool* RNG::get_noice(int size, double density) {
+bool* RNG::get_noise(int size, double density) {
     if (instance == NULL) {
         get_instance();
     }
@@ -53,13 +62,13 @@ bool RNG::get_bool(double factor) {
     return X < factor;
 }
 
-Color RNG::get_color() {
+ColorNoise RNG::get_color_noise() {
     if (instance == NULL) {
         get_instance();
     }
-    Color color;
-    color.r = get_int(0, 20) - 10;
-    color.g = get_int(0, 20) - 10;
-    color.b = get_int(0, 20) - 10;
+    ColorNoise color;
+    color.r = get_int(-10 ,10);
+    color.g = get_int(-10 ,10);
+    color.b = get_int(-10 ,10);
     return color;
 }
