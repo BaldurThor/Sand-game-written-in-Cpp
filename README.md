@@ -1,12 +1,12 @@
 # To build:
 
-    ```bash
-    make
-    ```
+```bash
+make
+```
 
 # To run:
 
-    ```bash
-    ./bin/sand.exe
-    ```
+```bash
+./bin/sand.exe
+```
     
