@@ -33,8 +33,11 @@ class Renderer {
         
         void reset_grid();
         void draw_circle(int, int, int, int, Material);
-        void bresenham_algo(int, int, int, Material);
+        void bresenham_algo(int, int, Material);
         void fill_grid(int, int, int ,int , Material);
+        // both x or both y have to be the same;
+        void put_line(int, int, int,int , Material);
+        void put_pixle(int, int, Material);
 
         void update();
         void update_helper(int, int);

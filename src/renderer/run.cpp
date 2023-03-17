@@ -21,6 +21,7 @@ void Renderer::run() {
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
                     SDL_GetMouseState(&dx, &dy);
+                    dy -= SCREEN_PADDING;
                     break;
                 case SDL_MOUSEBUTTONUP:
                     mousePressed = false;

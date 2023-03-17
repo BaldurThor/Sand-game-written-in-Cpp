@@ -8,64 +8,90 @@ void Renderer::reset_grid() {
     }
 }
 
-void Renderer::draw_circle(int xc, int yc, int x, int y, Material state) {
-    int brush_rad = brush_size / 2;
-    for (int xi = xc - brush_rad; xi < xc + brush_rad; xi++) {
-            for (int yi = yc - brush_rad; yi < yc + brush_rad; yi++) {
-                if (xi < SCREEN_WIDTH && yi < SCREEN_HEIGHT - (2 * SCREEN_PADDING) && xi >= 0 && yi >= 0) {
-                    if (grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material == NONE || state == NONE || state == WALL) {
-                        grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].material = state;
-                        grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
-                        grid[xi / GRID_CELL_SIZE][yi / GRID_CELL_SIZE].color_noise = RNG::get_color_noise();
-                    }
-                }
-            }
+void Renderer::put_pixle(int x, int y, Material state) {
+    if (x < SCREEN_WIDTH && y < SCREEN_HEIGHT - (2 * SCREEN_PADDING) && x >= 0 && y >= 0) {
+        if (grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].material == NONE || state == NONE || state == WALL) {
+            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].material = state;
+            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
+            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].color_noise = RNG::get_color_noise();
         }
-}
-
-void Renderer::bresenham_algo(int xc, int yc, int r, Material state) {
-    int x = 0, y = r;
-    int d = 3 - 2 * r;
-    draw_circle(xc, yc, x, y, state);
-    while (x <= y) {
-        x++;
-        if (d > 0) {
-            y--;
-            d = d + 4 * (x - y) + 10;
-        }
-        else {
-            d = d + 4 * x + 6;
-        }
-        draw_circle(xc, yc, x, y, state);
     }
 }
 
-void Renderer::fill_grid(int xa, int ya, int xb, int yb, Material state) {
-    int dx = abs(xa - xb), dy = abs(ya - yb);
-    int p = 2 * dy - dx;
-    int twoDy = 2 * dy, twoDyMinusDx = 2 * (dy - dx);
-    int x, y, xEnd;
-    int brush_rad = brush_size / 2;
-    if (xa > xb) {
-        x = xb;
-        y = yb;
-        xEnd = xa;
+
+void Renderer::put_line(int x, int y, int dx, int dy, Material state) {
+    if (x != dx && y != dy) {
+        throw std::invalid_argument("put_line only supports horizontal and vertical lines");
+    }
+    if (x == dx) {
+        if (y > dy) {
+            int place = y;
+            y = dy;
+            dy = place;
+        }
+        for (int i = y; i <= dy; i++) {
+            put_pixle(x, i, state);
+        }
     }
     else {
-        x = xa;
-        y = ya;
-        xEnd = xb;
+        if (x > dx) {
+            int place = x;
+            x = dx;
+            dx = place;
+        }
+        for (int i = x; i <= dx; i++) {
+            put_pixle(i, y, state);
+        }
     }
-    bresenham_algo(x, y, brush_rad, state);
-    while (x < xEnd) {
-        x++;
-        if (p < 0) {
-            p += twoDy;
+}
+
+
+void Renderer::draw_circle(int x, int y, int dx, int dy, Material state) {
+    put_line(x+dx, y+dy, x-dx, y+dy, state);
+    put_line(x+dy, y+dx, x-dy, y+dx, state);
+    put_line(x+dx, y-dy, x-dx, y-dy, state);
+    put_line(x+dy, y-dx, x-dy, y-dx, state);
+}
+
+void Renderer::bresenham_algo(int x, int y, Material state) {
+    int radius = brush_size/2, dx = 0, dy = radius;
+            int decesionParameter = 3 - 2 * radius;
+            draw_circle(x, y, dx, dy, state);
+            while (dy >= dx)
+            {
+                dx++;
+                if (decesionParameter > 0)
+                {
+                    dy--;
+                    decesionParameter = decesionParameter + 4 * (dx - dy) + 10;
+                }
+                else
+                    decesionParameter = decesionParameter + 4 * dx + 6;
+                draw_circle(x, y, dx, dy, state);
+            }
+}
+
+void Renderer::fill_grid(int x, int y, int dx, int dy, Material state) {
+
+    int fx = abs(dx - x);
+    int fy = abs(dy - y);
+    int sx = x < dx ? 1 : -1;
+    int sy = y < dy ? 1 : -1;
+    int err = fx - fy;
+
+    while (true) {
+        bresenham_algo(x, y, state);
+        if (x == dx && y == dy) {
+            break;
         }
-        else {
-            y++;
-            p += twoDyMinusDx;
+        int e2 = 2 * err;
+        if (e2 > -fy) {
+            err -= fy;
+            x += sx;
         }
-        bresenham_algo(x, y, brush_rad, state);
+        if (e2 < fx) {
+            err += fx;
+            y += sy;
+        }
     }
 }
