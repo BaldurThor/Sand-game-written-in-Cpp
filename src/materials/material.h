@@ -7,6 +7,7 @@ enum Material {
     GRAVEL,
     WATER,
     WALL,
+    OIL,
 };
 
 #endif

@@ -14,5 +14,6 @@ const char* const SAND_HEADER = "SAND";
 const char* const GRAVEL_HEADER = "GRAVEL";
 const char* const WATER_HEADER = "WATER";
 const char* const WALL_HEADER = "WALL";
+const char* const OIL_HEADER = "OIL";
 
 #endif

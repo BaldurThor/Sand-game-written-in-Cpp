@@ -13,6 +13,7 @@ struct Materials_struct
     static Materials_struct* water;
     static Materials_struct* none;
     static Materials_struct* wall;
+    static Materials_struct* oil;
     bool liquid = false;
     bool immovable = false;
     double friction;

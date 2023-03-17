@@ -28,6 +28,12 @@ void Renderer::update_helper(int width, int height) {
         Pixle other_pixle = grid[width][height + 1];
         Materials_struct *other_mat_struct = Materials_struct::get_instance(other_pixle);
 
+        if (mat_struct->liquid && other_mat_struct->liquid && other_mat_struct->weight < mat_struct->weight) {
+            grid[width][height + 1] = pixle;
+            grid[width][height] = other_pixle;
+            return;
+        }
+
         if (pixle.velocity > other_mat_struct->weight) {
             pixle.velocity -= other_mat_struct->friction;
             grid[width][height + 1] = pixle;
@@ -78,7 +84,7 @@ bool Renderer::update_move(int width, int height, Pixle pixle, int velocity, int
     }
     other_pixle = grid[width + velocity][height + height_mod];
     mat = Materials_struct::get_instance(other_pixle);
-    if (other_pixle == NONE || mat->liquid) {
+    if ((other_pixle == NONE || mat->liquid) && pixle != other_pixle) {
         grid[width + velocity][height + height_mod] = pixle;
         grid[width][height] = other_pixle;
         return true;

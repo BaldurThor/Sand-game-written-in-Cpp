@@ -59,6 +59,10 @@ void Renderer::run() {
                             mat = WALL;
                             mat_text = WALL_HEADER;
                             break;
+                        case SDLK_5:    
+                            mat = OIL;
+                            mat_text = OIL_HEADER;
+                            break;
                         case SDLK_r:
                             cout << "Resetting grid..." << endl;
                             reset_grid();
