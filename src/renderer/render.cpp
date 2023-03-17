@@ -7,7 +7,6 @@ void Renderer::render() {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderClear(renderer);
     Materials_struct* mat;
-    int x, y;
 
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
@@ -21,23 +20,70 @@ void Renderer::render() {
             }
         }
     }
-    SDL_GetMouseState(&x, &y);
-    SDL_Rect cursorRect = { x - (brush_size / 2), y - (brush_size / 2), brush_size, brush_size };
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 80);
-    SDL_RenderFillRect(renderer, &cursorRect);
-
     UI_layer();
 }
 
+void draw_pixel(SDL_Renderer *renderer, int x, int y) {
+    SDL_Rect pixel = { (x / GRID_CELL_SIZE) * GRID_CELL_SIZE, (y / GRID_CELL_SIZE) * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE };
+    SDL_RenderFillRect(renderer, &pixel);
+}
+
+void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
+    radius = radius / 2;
+    const int32_t diameter = (radius * 2);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x9F);
+
+    int32_t x = (radius - 1);
+    int32_t y = 0;
+    int32_t tx = 1;
+    int32_t ty = 1;
+    int32_t error = (tx - diameter);
+
+    while (x >= y)
+    {
+        // Each of the following renders an octant of the circle
+        draw_pixel(renderer, dx + x, dy - y);
+        draw_pixel(renderer, dx + x, dy + y);
+        draw_pixel(renderer, dx - x, dy - y);
+        draw_pixel(renderer, dx - x, dy + y);
+        draw_pixel(renderer, dx + y, dy - x);
+        draw_pixel(renderer, dx + y, dy + x);
+        draw_pixel(renderer, dx - y, dy - x);
+        draw_pixel(renderer, dx - y, dy + x);
+
+        if (error <= 0)
+        {
+            ++y;
+            error += ty;
+            ty += 2;
+        }
+
+        if (error > 0)
+        {
+            --x;
+            tx += 2;
+            error += (tx - diameter);
+        }
+
+    }
+}
+
 void Renderer::UI_layer() {
+    int x, y;
+
+    // Draw cursor
+    SDL_GetMouseState(&x, &y);
+    draw_cursor(renderer, x, y, brush_size);
+
+    // Draw header and footer
     SDL_Rect headerRect = { 0, 0, SCREEN_WIDTH, SCREEN_PADDING };
     SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
     SDL_RenderFillRect(renderer, &headerRect);
-
     SDL_Rect footerRect = { 0, SCREEN_HEIGHT - SCREEN_PADDING, SCREEN_WIDTH, SCREEN_PADDING };
     SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
     SDL_RenderFillRect(renderer, &footerRect);
 
+    // Draw text
     draw_text(mat_text, 4, 4);
     draw_text("Press R to reset", 4, SCREEN_HEIGHT - 16, 12);
     draw_text(brush_size, SCREEN_WIDTH - 24, 4, 12);
