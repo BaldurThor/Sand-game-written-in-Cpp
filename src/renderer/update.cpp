@@ -56,22 +56,29 @@ bool Renderer::update_move(int width, int height, Pixle pixle, int velocity, int
     if ((width + velocity < 0) || (width + velocity > GRID_WIDTH - 1)) {
             return false;
     }
+    Pixle other_pixle;
+    Materials_struct *mat;
     if (0 < velocity) {
         for (int i = 1; i <= velocity; i++) {
-            if (grid[width + i][height + height_mod] != NONE && grid[width + i][height + height_mod] != pixle) {
+            other_pixle = grid[width + i][height + height_mod];
+            mat = Materials_struct::get_instance(other_pixle);
+            if (other_pixle != NONE && other_pixle != pixle && !mat->liquid) {
                 return false;
             }
         }
     }
     else {
         for (int i = -velocity; i > 0; i--) {
-            if (grid[width - i][height + height_mod] != NONE && grid[width - i][height + height_mod] != pixle) {
+            other_pixle = grid[width - i][height + height_mod];
+            mat = Materials_struct::get_instance(other_pixle);
+            if (other_pixle != NONE && other_pixle != pixle && !mat->liquid) {
                 return false;
             }
         }
     }
-    Pixle other_pixle = grid[width + velocity][height + height_mod];
-    if (other_pixle == NONE) {
+    other_pixle = grid[width + velocity][height + height_mod];
+    mat = Materials_struct::get_instance(other_pixle);
+    if (other_pixle == NONE || mat->liquid) {
         grid[width + velocity][height + height_mod] = pixle;
         grid[width][height] = other_pixle;
         return true;
