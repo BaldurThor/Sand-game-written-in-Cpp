@@ -4,8 +4,10 @@ using namespace std;
 
 void Renderer::render() {
     SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderClear(renderer);
     Materials_struct* mat;
+    int x, y;
 
     for (int height = 0; height < GRID_HEIGHT; height++) {
         for (int width = 0; width < GRID_WIDTH; width++) {
@@ -19,10 +21,26 @@ void Renderer::render() {
             }
         }
     }
+    SDL_GetMouseState(&x, &y);
+    SDL_Rect cursorRect = { x - (brush_size / 2), y - (brush_size / 2), brush_size, brush_size };
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 80);
+    SDL_RenderFillRect(renderer, &cursorRect);
 
-    draw_text(header, 4, 4);
-    draw_text("Press R to reset", 4, SCREEN_HEIGHT - 12, 12, { 0, 0, 0 });
-    draw_text(brush_size, SCREEN_WIDTH - 12, 4, 12, { 0, 0, 0 });
+    UI_layer();
+}
+
+void Renderer::UI_layer() {
+    SDL_Rect headerRect = { 0, 0, SCREEN_WIDTH, SCREEN_PADDING };
+    SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
+    SDL_RenderFillRect(renderer, &headerRect);
+
+    SDL_Rect footerRect = { 0, SCREEN_HEIGHT - SCREEN_PADDING, SCREEN_WIDTH, SCREEN_PADDING };
+    SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
+    SDL_RenderFillRect(renderer, &footerRect);
+
+    draw_text(mat_text, 4, 4);
+    draw_text("Press R to reset", 4, SCREEN_HEIGHT - 16, 12);
+    draw_text(brush_size, SCREEN_WIDTH - 24, 4, 12);
     SDL_RenderPresent(renderer);
 }
 
@@ -54,11 +72,11 @@ void Renderer::draw_text(const char *text, int posx, int posy, int size, SDL_Col
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy, int size) {
-    draw_text(text, posx, posy, size, { 0, 0, 0 });
+    draw_text(text, posx, posy, size, { 0xf2, 0xf0, 0xe5 });
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy) {
-    draw_text(text, posx, posy, 16, { 0, 0, 0 });
+    draw_text(text, posx, posy, 16, { 0xf2, 0xf0, 0xe5 });
 }
 
 void Renderer::draw_text(const int text, int posx, int posy, int size, SDL_Color color) {
@@ -66,9 +84,9 @@ void Renderer::draw_text(const int text, int posx, int posy, int size, SDL_Color
 }
 
 void Renderer::draw_text(const int text, int posx, int posy, int size) {
-    draw_text(to_string(text).c_str(), posx, posy, size, { 0, 0, 0 });
+    draw_text(to_string(text).c_str(), posx, posy, size, { 0xf2, 0xf0, 0xe5 });
 }
 
 void Renderer::draw_text(const int text, int posx, int posy) {
-    draw_text(to_string(text).c_str(), posx, posy, 16, { 0, 0, 0 });
+    draw_text(to_string(text).c_str(), posx, posy, 16, { 0xf2, 0xf0, 0xe5 });
 }

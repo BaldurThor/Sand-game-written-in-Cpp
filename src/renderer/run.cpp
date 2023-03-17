@@ -9,7 +9,7 @@ void Renderer::run() {
     SDL_Event e;
     Material mat = SAND;
     int x, y, dx, dy;
-    header = SAND_HEADER;
+    mat_text = SAND_HEADER;
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -21,27 +21,43 @@ void Renderer::run() {
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
                     SDL_GetMouseState(&dx, &dy);
+                    dy -= SCREEN_PADDING;
                     break;
                 case SDL_MOUSEBUTTONUP:
                     mousePressed = false;
                     break;
+                case SDL_MOUSEWHEEL:
+                    if (e.wheel.y > 0) {
+                        if (brush_size < 95) {
+                            brush_size += 2;
+                        } else {
+                            break;
+                        }
+                    } else if (e.wheel.y < 0) {
+                        if (brush_size > 3) {
+                            brush_size -= 2;
+                        } else {
+                            break;
+                        }
+                    }
+
                 case SDL_KEYDOWN:
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
                             mat = SAND;
-                            header = SAND_HEADER;
+                            mat_text = SAND_HEADER;
                             break;
                         case SDLK_2:
                             mat = GRAVEL;
-                            header = GRAVEL_HEADER;
+                            mat_text = GRAVEL_HEADER;
                             break;
                         case SDLK_3:
                             mat = WATER;
-                            header = WATER_HEADER;
+                            mat_text = WATER_HEADER;
                             break;
                         case SDLK_4:
                             mat = WALL;
-                            header = WALL_HEADER;
+                            mat_text = WALL_HEADER;
                             break;
                         case SDLK_r:
                             cout << "Resetting grid..." << endl;
