@@ -16,4 +16,8 @@ const char* const WATER_HEADER = "WATER";
 const char* const WALL_HEADER = "WALL";
 const char* const OIL_HEADER = "OIL";
 
+const SDL_Color BG_COLOR = { 242, 240, 229 };
+const SDL_Color HEADER_COLOR = { 69, 68, 79 };
+const SDL_Color TEXT_COLOR = { 242, 240, 229 };
+
 #endif

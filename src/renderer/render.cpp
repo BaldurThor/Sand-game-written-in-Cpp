@@ -77,10 +77,10 @@ void Renderer::UI_layer() {
 
     // Draw header and footer
     SDL_Rect headerRect = { 0, 0, SCREEN_WIDTH, SCREEN_PADDING };
-    SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
+    SDL_SetRenderDrawColor(renderer, HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0x9f);
     SDL_RenderFillRect(renderer, &headerRect);
     SDL_Rect footerRect = { 0, SCREEN_HEIGHT - SCREEN_PADDING, SCREEN_WIDTH, SCREEN_PADDING };
-    SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
+    SDL_SetRenderDrawColor(renderer, HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0x9f);
     SDL_RenderFillRect(renderer, &footerRect);
 
     // Draw text
@@ -93,7 +93,7 @@ void Renderer::UI_layer() {
 void Renderer::draw_text(const char *text, int posx, int posy, int size, SDL_Color color) {
     TTF_Font *font = TTF_OpenFont("dogica.ttf", size);
     if (font == NULL) {
-        cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << endl;
+        cout << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << endl;
         return;
     }
     SDL_Color textColor = { color.r, color.g, color.b };
@@ -118,11 +118,11 @@ void Renderer::draw_text(const char *text, int posx, int posy, int size, SDL_Col
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy, int size) {
-    draw_text(text, posx, posy, size, { 0xf2, 0xf0, 0xe5 });
+    draw_text(text, posx, posy, size, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy) {
-    draw_text(text, posx, posy, 16, { 0xf2, 0xf0, 0xe5 });
+    draw_text(text, posx, posy, 16, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }
 
 void Renderer::draw_text(const int text, int posx, int posy, int size, SDL_Color color) {
@@ -130,9 +130,9 @@ void Renderer::draw_text(const int text, int posx, int posy, int size, SDL_Color
 }
 
 void Renderer::draw_text(const int text, int posx, int posy, int size) {
-    draw_text(to_string(text).c_str(), posx, posy, size, { 0xf2, 0xf0, 0xe5 });
+    draw_text(to_string(text).c_str(), posx, posy, size, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }
 
 void Renderer::draw_text(const int text, int posx, int posy) {
-    draw_text(to_string(text).c_str(), posx, posy, 16, { 0xf2, 0xf0, 0xe5 });
+    draw_text(to_string(text).c_str(), posx, posy, 16, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }

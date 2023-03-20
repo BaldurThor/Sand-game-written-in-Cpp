@@ -17,7 +17,7 @@ class Renderer {
         int brush_size = 5; // must be odd
         const char *mat_text;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
-        SDL_Color background_color = {242,240,229};
+        SDL_Color background_color = { BG_COLOR.r, BG_COLOR.g, BG_COLOR.b };
         bool scan_direction = true;
     protected:
         void render();
