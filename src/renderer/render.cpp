@@ -39,8 +39,7 @@ void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
     int32_t ty = 1;
     int32_t error = (tx - diameter);
 
-    while (x >= y)
-    {
+    while (x >= y) {
         // Each of the following renders an octant of the circle
         draw_pixel(renderer, dx + x, dy - y);
         draw_pixel(renderer, dx + x, dy + y);
@@ -51,15 +50,12 @@ void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
         draw_pixel(renderer, dx - y, dy - x);
         draw_pixel(renderer, dx - y, dy + x);
 
-        if (error <= 0)
-        {
+        if (error <= 0) {
             ++y;
             error += ty;
             ty += 2;
         }
-
-        if (error > 0)
-        {
+        if (error > 0) {
             --x;
             tx += 2;
             error += (tx - diameter);

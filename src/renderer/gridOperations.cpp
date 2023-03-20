@@ -55,20 +55,19 @@ void Renderer::draw_circle(int x, int y, int dx, int dy, Material state) {
 
 void Renderer::bresenham_algo(int x, int y, Material state) {
     int radius = brush_size/2, dx = 0, dy = radius;
-            int decesionParameter = 3 - 2 * radius;
-            draw_circle(x, y, dx, dy, state);
-            while (dy >= dx)
-            {
-                dx++;
-                if (decesionParameter > 0)
-                {
-                    dy--;
-                    decesionParameter = decesionParameter + 4 * (dx - dy) + 10;
-                }
-                else
-                    decesionParameter = decesionParameter + 4 * dx + 6;
-                draw_circle(x, y, dx, dy, state);
-            }
+    int decesionParameter = 3 - 2 * radius;
+    draw_circle(x, y, dx, dy, state);
+    while (dy >= dx) {
+        dx++;
+        if (decesionParameter > 0) {
+            dy--;
+            decesionParameter = decesionParameter + 4 * (dx - dy) + 10;
+        }
+        else {
+            decesionParameter = decesionParameter + 4 * dx + 6;
+        }
+        draw_circle(x, y, dx, dy, state);
+    }
 }
 
 void Renderer::fill_grid(int x, int y, int dx, int dy, Material state) {

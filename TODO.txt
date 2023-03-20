@@ -1,10 +1,6 @@
 TODO:
-    -Random noice for the color in the materials.
     -Try some kind of noice for the color of the materials, like vornoi or somthing.
-    -Materials have weight so that ex. stone gets buried under sand and sand or stone go under water.
     -LAGA LEKA -------BUIÐ
-    -UI
-    -Better color scheme for the background.
     -Brush. Make it a circle with noise so its more scattered.
     -Add more materials:
         -Acid
@@ -12,7 +8,7 @@ TODO:
         -Fire
         -Void block
         -Emitter
-        -Oil
+        -Oil-DONE
         -Gunpowder
         -Gas | maybe
         -Playable character
@@ -20,4 +16,13 @@ TODO:
         -Cement
         -Grass, where if it touches another material it sticks to it
     -stasis
-    -Particles
+    -main menu - scenes
+    -some kind of settings
+    -quit
+    -pause-on esc
+
+DONE:
+    -Random noice for the color in the materials.
+    -Materials have weight so that ex. stone gets buried under sand and sand or stone go under water.
+    -UI
+    -Better color scheme for the background.
