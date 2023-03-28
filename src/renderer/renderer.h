@@ -42,6 +42,9 @@ class Renderer {
         void draw_text(const int text, int posx, int posy, int size, SDL_Color color);
         void draw_text(const int text, int posx, int posy, int size);
         void draw_text(const int text, int posx, int posy);
+
+        void draw_pixel(int, int);
+        void draw_cursor(int, int, int);
         
         void reset_grid();
         void draw_circle(int, int, int, int, Material);
