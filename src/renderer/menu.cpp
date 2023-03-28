@@ -28,6 +28,13 @@ void Renderer::menu() {
                         }
                     }
                     break;
+                case SDL_KEYDOWN:
+                    switch (e.key.keysym.sym) {
+                        case SDLK_ESCAPE:
+                            how_to_play = false;
+                            break;
+                    }
+                    break;
             }
         }
         ticksDelta = ticksA - ticksB;

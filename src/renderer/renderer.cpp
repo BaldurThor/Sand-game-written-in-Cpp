@@ -45,6 +45,12 @@ Renderer::Renderer() {
     start_button = new Button(START_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
     how_to_play_button = new Button(HOW_TO_PLAY_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
     exit_button = new Button(EXIT_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
+    sand_button = new Button(SAND_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    gravel_button = new Button(GRAVEL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    water_button = new Button(WATER_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    oil_button = new Button(OIL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    wall_button = new Button(WALL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+
 
     SDL_ShowCursor(SDL_DISABLE);
 }

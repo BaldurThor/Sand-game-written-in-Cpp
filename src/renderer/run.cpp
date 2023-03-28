@@ -7,7 +7,6 @@ bool Renderer::run() {
     bool quit = false;
     bool mousePressed = false;
     SDL_Event e;
-    Material mat = SAND;
     int x, y, dx, dy;
 
     while (!quit) {
@@ -21,6 +20,17 @@ bool Renderer::run() {
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
                     SDL_GetMouseState(&dx, &dy);
+                    if (sand_button->within(dx, dy)) {
+                        mat = SAND;
+                    } else if (gravel_button->within(dx, dy)) {
+                        mat = GRAVEL;
+                    } else if (water_button->within(dx, dy)) {
+                        mat = WATER;
+                    } else if (oil_button->within(dx, dy)) {
+                        mat = OIL;
+                    } else if (wall_button->within(dx, dy)) {
+                        mat = WALL;
+                    }
                     dy -= SCREEN_PADDING;
                     break;
                 case SDL_MOUSEBUTTONUP:
@@ -45,26 +55,20 @@ bool Renderer::run() {
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
                             mat = SAND;
-                            mat_text = SAND_HEADER;
                             break;
                         case SDLK_2:
                             mat = GRAVEL;
-                            mat_text = GRAVEL_HEADER;
                             break;
                         case SDLK_3:
                             mat = WATER;
-                            mat_text = WATER_HEADER;
                             break;
-                        case SDLK_4:
-                            mat = WALL;
-                            mat_text = WALL_HEADER;
-                            break;
-                        case SDLK_5:    
+                        case SDLK_4:    
                             mat = OIL;
-                            mat_text = OIL_HEADER;
+                            break;
+                        case SDLK_5:
+                            mat = WALL;
                             break;
                         case SDLK_r:
-                            cout << "Resetting grid..." << endl;
                             reset_grid();
                             break;
                         case SDLK_ESCAPE:

@@ -18,7 +18,7 @@ class Renderer {
         SDL_Window *window;
         SDL_Texture *logo_texture;
         int brush_size = 5; // must be odd
-        const char *mat_text = SAND_HEADER;
+        Material mat = SAND;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
         SDL_Color background_color = { BG_COLOR.r, BG_COLOR.g, BG_COLOR.b };
         bool scan_direction = true;
@@ -27,8 +27,8 @@ class Renderer {
         Button *how_to_play_button;
         Button *exit_button;
         Button *sand_button;
-        Button *water_button;
         Button *gravel_button;
+        Button *water_button;
         Button *oil_button;
         Button *wall_button;
     protected:

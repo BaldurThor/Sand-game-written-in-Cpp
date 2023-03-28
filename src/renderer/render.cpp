@@ -80,7 +80,47 @@ void Renderer::UI_layer(bool menu) {
     SDL_RenderFillRect(renderer, &footerRect);
 
     // Draw texts
-    draw_text(mat_text, 4, 4);
+    if (!menu) {
+        sand_button->update(x, y);
+        gravel_button->update(x, y);
+        water_button->update(x, y);
+        oil_button->update(x, y);
+        wall_button->update(x, y);
+    }
+
+    SDL_Color sand_button_color = sand_button->get_color();
+    SDL_Color gravel_button_color = gravel_button->get_color();
+    SDL_Color water_button_color = water_button->get_color();
+    SDL_Color oil_button_color = oil_button->get_color();
+    SDL_Color wall_button_color = wall_button->get_color();
+
+    switch (mat) {
+        case SAND:
+            sand_button_color = SELECTED_TEXT_COLOR;
+            break;
+        case GRAVEL:
+            gravel_button_color = SELECTED_TEXT_COLOR;
+            break;
+        case WATER:
+            water_button_color = SELECTED_TEXT_COLOR;
+            break;
+        case OIL:
+            oil_button_color = SELECTED_TEXT_COLOR;
+            break;
+        case WALL:
+            wall_button_color = SELECTED_TEXT_COLOR;
+            break;
+        case NONE:
+            break;
+    }
+
+    draw_text(SAND_HEADER, 4, 4, MATERIAL_BUTTON_FONT_SIZE, sand_button_color);
+    draw_text(GRAVEL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 5, 4, MATERIAL_BUTTON_FONT_SIZE, gravel_button_color);
+    draw_text(WATER_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 12, 4, MATERIAL_BUTTON_FONT_SIZE, water_button_color);
+    draw_text(OIL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 18, 4, MATERIAL_BUTTON_FONT_SIZE, oil_button_color);
+    draw_text(WALL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 22, 4, MATERIAL_BUTTON_FONT_SIZE, wall_button_color);
+
+
     draw_text(RESET_TEXT, 4, SCREEN_HEIGHT - 16, 12);
     draw_text(brush_size, SCREEN_WIDTH - 24, 4, 12);
     if (menu) {
@@ -89,14 +129,24 @@ void Renderer::UI_layer(bool menu) {
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x20);
         SDL_RenderFillRect(renderer, &fadeRect);
         SDL_RenderCopy(renderer, logo_texture, NULL, &LOGO_RECT);
-        start_button->update(x, y);
-        how_to_play_button->update(x, y);
-        exit_button->update(x, y);
-
+        if (!how_to_play) {
+            start_button->update(x, y);
+            how_to_play_button->update(x, y);
+            exit_button->update(x, y);
+        }
         draw_text("START", (SCREEN_WIDTH/2) + (3 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - 2 * BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , start_button->get_color());
         draw_text("HOW TO PLAY", (SCREEN_WIDTH/2) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , how_to_play_button->get_color());
         draw_text("EXIT", (SCREEN_WIDTH/2) + (3.5 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2), BUTTON_FONT_SIZE , exit_button->get_color());
-
+        if (how_to_play) {
+            SDL_Rect howToPlayRect = { (SCREEN_WIDTH/2) - (HOW_TO_PLAY_WIDTH/2), (SCREEN_HEIGHT/2) - (HOW_TO_PLAY_HEIGHT/2), HOW_TO_PLAY_WIDTH, HOW_TO_PLAY_HEIGHT };
+            SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xbf);
+            SDL_RenderFillRect(renderer, &howToPlayRect);
+            draw_text("HOW TO PLAY",                                        (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (4.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Use the mouse to draw materials on the screen.",     (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (2.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Use the mouse wheel to change the brush size",       (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (0.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Press the \'r\' key to reset the simulation.",       (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (1.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Press the escape key to return to the main menu.",   (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (3.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+        }
     }
 
     SDL_RenderPresent(renderer);
