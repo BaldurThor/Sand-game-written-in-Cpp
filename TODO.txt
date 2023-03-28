@@ -1,6 +1,5 @@
 TODO:
     -Try some kind of noice for the color of the materials, like vornoi or somthing.
-    -LAGA LEKA -------BUIÐ
     -Brush. Make it a circle with noise so its more scattered.
     -Add more materials:
         -Acid
@@ -20,8 +19,10 @@ TODO:
     -some kind of settings
     -quit
     -pause-on esc
+    -audio
 
 DONE:
+    -LAGA LEKA -------BUIÐ
     -Random noice for the color in the materials.
     -Materials have weight so that ex. stone gets buried under sand and sand or stone go under water.
     -UI
