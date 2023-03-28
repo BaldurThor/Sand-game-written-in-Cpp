@@ -135,7 +135,7 @@ void Renderer::UI_layer(bool menu) {
             exit_button->update(x, y);
         }
         draw_text("START", (SCREEN_WIDTH/2) + (3 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - 2 * BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , start_button->get_color());
-        draw_text("HOW TO PLAY", (SCREEN_WIDTH/2) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , how_to_play_button->get_color());
+        draw_text("HOW TO PLAY", (SCREEN_WIDTH/2) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - BUTTON_FONT_SIZE, BUTTON_FONT_SIZE, how_to_play_button->get_color());
         draw_text("EXIT", (SCREEN_WIDTH/2) + (3.5 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2), BUTTON_FONT_SIZE , exit_button->get_color());
         if (how_to_play) {
             SDL_Rect howToPlayRect = { (SCREEN_WIDTH/2) - (HOW_TO_PLAY_WIDTH/2), (SCREEN_HEIGHT/2) - (HOW_TO_PLAY_HEIGHT/2), HOW_TO_PLAY_WIDTH, HOW_TO_PLAY_HEIGHT };

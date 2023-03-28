@@ -26,6 +26,8 @@ const SDL_Color SELECTED_TEXT_COLOR = { 0, 0, 0 };
 const SDL_Color MENU_BUTTON_COLOR = { 0x80, 0x80, 0x80 };
 const SDL_Color MENU_BUTTON_HOVER_COLOR = { 0, 0, 0 };
 
+const char* const AUDIO_PATH = "bin/assets/sandsound.wav";
+
 const char* const LOGO_PATH = "bin/assets/logo.png";
 const char* const ICON_PATH = "bin/assets/icon.png";
 const int LOGO_WIDTH = 194;
