@@ -5,24 +5,36 @@
 #include <stdexcept>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
+#include "SDL2/SDL_image.h"
 
 #include "../materials/materialsStruct.h"
 #include "../consts.h"
 #include "../color/colorMixer.h"
+#include "../button/button.h"
 
 class Renderer {
     private:
         SDL_Renderer *renderer;
         SDL_Window *window;
+        SDL_Texture *logo_texture;
         int brush_size = 5; // must be odd
-        const char *mat_text;
+        const char *mat_text = SAND_HEADER;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
         SDL_Color background_color = {242,240,229};
         bool scan_direction = true;
+        bool how_to_play = false;
+        Button *start_button;
+        Button *how_to_play_button;
+        Button *exit_button;
+        Button *sand_button;
+        Button *water_button;
+        Button *gravel_button;
+        Button *oil_button;
+        Button *wall_button;
     protected:
-        void render();
+        void render(bool);
 
-        void UI_layer();
+        void UI_layer(bool);
 
         void draw_text(const char *text, int posx, int posy, int size, SDL_Color color);
         void draw_text(const char *text, int posx, int posy, int size);
@@ -42,11 +54,12 @@ class Renderer {
         void update();
         void update_helper(int, int);
         bool update_move(int, int, Pixle, int, int);
+        
+        bool run();
     public:
         Renderer();
         ~Renderer();
-        void run();
-
+        void menu();
 };
 
 #endif

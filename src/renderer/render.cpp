@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void Renderer::render() {
+void Renderer::render(bool menu) {
     SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g, background_color.b, 255);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderClear(renderer);
@@ -20,7 +20,7 @@ void Renderer::render() {
             }
         }
     }
-    UI_layer();
+    UI_layer(menu);
 }
 
 void draw_pixel(SDL_Renderer *renderer, int x, int y) {
@@ -68,7 +68,7 @@ void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
     }
 }
 
-void Renderer::UI_layer() {
+void Renderer::UI_layer(bool menu) {
     int x, y;
 
     // Draw cursor
@@ -83,10 +83,26 @@ void Renderer::UI_layer() {
     SDL_SetRenderDrawColor(renderer, 0x45, 0x44, 0x4f, 0x9f);
     SDL_RenderFillRect(renderer, &footerRect);
 
-    // Draw text
+    // Draw texts
     draw_text(mat_text, 4, 4);
-    draw_text("Press R to reset", 4, SCREEN_HEIGHT - 16, 12);
+    draw_text(RESET_TEXT, 4, SCREEN_HEIGHT - 16, 12);
     draw_text(brush_size, SCREEN_WIDTH - 24, 4, 12);
+    if (menu) {
+        //draw menu texts
+        SDL_Rect fadeRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x20);
+        SDL_RenderFillRect(renderer, &fadeRect);
+        SDL_RenderCopy(renderer, logo_texture, NULL, &LOGO_RECT);
+        start_button->update(x, y);
+        how_to_play_button->update(x, y);
+        exit_button->update(x, y);
+
+        draw_text("START", (SCREEN_WIDTH/2) + (3 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - 2 * BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , start_button->get_color());
+        draw_text("HOW TO PLAY", (SCREEN_WIDTH/2) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , how_to_play_button->get_color());
+        draw_text("EXIT", (SCREEN_WIDTH/2) + (3.5 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2), BUTTON_FONT_SIZE , exit_button->get_color());
+
+    }
+
     SDL_RenderPresent(renderer);
 }
 

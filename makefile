@@ -1,5 +1,5 @@
 #All the object files that need to be compiled
-OBJS := main.cpp RNG/RNG.cpp renderer/gridOperations.cpp renderer/render.cpp renderer/renderer.cpp renderer/run.cpp renderer/update.cpp materials/materialsStruct.cpp materials/pixle.cpp color/colorMixer.cpp
+OBJS := main.cpp RNG/RNG.cpp renderer/gridOperations.cpp renderer/render.cpp renderer/renderer.cpp renderer/run.cpp renderer/update.cpp renderer/menu.cpp materials/materialsStruct.cpp materials/pixle.cpp color/colorMixer.cpp button/button.cpp
 
 SRC_DIR := ./src/
 OBJS := $(addprefix $(SRC_DIR), $(OBJS))
@@ -10,7 +10,7 @@ INCLUDE_PATHS = -Iinclude
 LIBRARY_PATHS = -Llib
 
 COMPILER_FLAGS = -Wall#-w -Wl,-subsystem,windows
-LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2_ttf -lSDL2
+LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2_ttf -lSDL2_image -lSDL2
 
 OBJ_NAME = bin/sand.exe
 
