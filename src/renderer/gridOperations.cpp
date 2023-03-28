@@ -94,3 +94,8 @@ void Renderer::fill_grid(int x, int y, int dx, int dy, Material state) {
         }
     }
 }
+
+void Renderer::draw_pixel(int x, int y) {
+    SDL_Rect pixel = { (x / GRID_CELL_SIZE) * GRID_CELL_SIZE, (y / GRID_CELL_SIZE) * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE };
+    SDL_RenderFillRect(renderer, &pixel);
+}

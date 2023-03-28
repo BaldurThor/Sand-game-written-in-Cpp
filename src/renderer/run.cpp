@@ -39,13 +39,13 @@ bool Renderer::run() {
                 case SDL_MOUSEWHEEL:
                     if (e.wheel.y > 0) {
                         if (brush_size < 95) {
-                            brush_size += 2;
+                            brush_size += GRID_CELL_SIZE;
                         } else {
                             break;
                         }
                     } else if (e.wheel.y < 0) {
-                        if (brush_size > 3) {
-                            brush_size -= 2;
+                        if (brush_size > 5) {
+                            brush_size -= GRID_CELL_SIZE;
                         } else {
                             break;
                         }

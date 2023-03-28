@@ -23,12 +23,7 @@ void Renderer::render(bool menu) {
     UI_layer(menu);
 }
 
-void draw_pixel(SDL_Renderer *renderer, int x, int y) {
-    SDL_Rect pixel = { (x / GRID_CELL_SIZE) * GRID_CELL_SIZE, (y / GRID_CELL_SIZE) * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE };
-    SDL_RenderFillRect(renderer, &pixel);
-}
-
-void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
+void Renderer::draw_cursor(int dx, int dy, int radius) {
     radius = radius / 2;
     const int32_t diameter = (radius * 2);
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x9F);
@@ -41,14 +36,14 @@ void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
 
     while (x >= y) {
         // Each of the following renders an octant of the circle
-        draw_pixel(renderer, dx + x, dy - y);
-        draw_pixel(renderer, dx + x, dy + y);
-        draw_pixel(renderer, dx - x, dy - y);
-        draw_pixel(renderer, dx - x, dy + y);
-        draw_pixel(renderer, dx + y, dy - x);
-        draw_pixel(renderer, dx + y, dy + x);
-        draw_pixel(renderer, dx - y, dy - x);
-        draw_pixel(renderer, dx - y, dy + x);
+        draw_pixel(dx + x, dy - y);
+        draw_pixel(dx + x, dy + y);
+        draw_pixel(dx - x, dy - y);
+        draw_pixel(dx - x, dy + y);
+        draw_pixel(dx + y, dy - x);
+        draw_pixel(dx + y, dy + x);
+        draw_pixel(dx - y, dy - x);
+        draw_pixel(dx - y, dy + x);
 
         if (error <= 0) {
             ++y;
@@ -62,6 +57,7 @@ void draw_cursor(SDL_Renderer* renderer, int dx, int dy, int radius) {
         }
 
     }
+    draw_pixel(dx, dy);
 }
 
 void Renderer::UI_layer(bool menu) {
@@ -69,7 +65,6 @@ void Renderer::UI_layer(bool menu) {
 
     // Draw cursor
     SDL_GetMouseState(&x, &y);
-    draw_cursor(renderer, x, y, brush_size);
 
     // Draw header and footer
     SDL_Rect headerRect = { 0, 0, SCREEN_WIDTH, SCREEN_PADDING };
@@ -114,15 +109,15 @@ void Renderer::UI_layer(bool menu) {
             break;
     }
 
-    draw_text(SAND_HEADER, 4, 4, MATERIAL_BUTTON_FONT_SIZE, sand_button_color);
-    draw_text(GRAVEL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 5, 4, MATERIAL_BUTTON_FONT_SIZE, gravel_button_color);
-    draw_text(WATER_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 12, 4, MATERIAL_BUTTON_FONT_SIZE, water_button_color);
-    draw_text(OIL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 18, 4, MATERIAL_BUTTON_FONT_SIZE, oil_button_color);
-    draw_text(WALL_HEADER, 4 + MATERIAL_BUTTON_FONT_SIZE * 22, 4, MATERIAL_BUTTON_FONT_SIZE, wall_button_color);
+    draw_text(SAND_HEADER, TEXT_PADDING, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, sand_button_color);
+    draw_text(GRAVEL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 5, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, gravel_button_color);
+    draw_text(WATER_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 12, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, water_button_color);
+    draw_text(OIL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 18, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, oil_button_color);
+    draw_text(WALL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 22, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, wall_button_color);
 
 
-    draw_text(RESET_TEXT, 4, SCREEN_HEIGHT - 16, 12);
-    draw_text(brush_size, SCREEN_WIDTH - 24, 4, 12);
+    draw_text(RESET_TEXT, TEXT_PADDING, SCREEN_HEIGHT - (MATERIAL_BUTTON_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE);
+    draw_text(brush_size, SCREEN_WIDTH - ((2 * MATERIAL_BUTTON_FONT_SIZE) + TEXT_PADDING), TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE);
     if (menu) {
         //draw menu texts
         SDL_Rect fadeRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -141,14 +136,19 @@ void Renderer::UI_layer(bool menu) {
             SDL_Rect howToPlayRect = { (SCREEN_WIDTH/2) - (HOW_TO_PLAY_WIDTH/2), (SCREEN_HEIGHT/2) - (HOW_TO_PLAY_HEIGHT/2), HOW_TO_PLAY_WIDTH, HOW_TO_PLAY_HEIGHT };
             SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xbf);
             SDL_RenderFillRect(renderer, &howToPlayRect);
-            draw_text("HOW TO PLAY",                                        (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (4.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Use the mouse to draw materials on the screen.",     (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (2.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Use the mouse wheel to change the brush size",       (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (0.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Press the \'r\' key to reset the simulation.",       (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (1.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Press the escape key to return to the main menu.",   (SCREEN_WIDTH/2) - (24 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (3.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            //add lines
+            draw_text("HOW TO PLAY",                                                    (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (7.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Use the left mouse button to draw materials on the screen.",     (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (5.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Use the right mouse button to erase materials from the screen.", (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (3.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Use the mouse wheel to change the brush size",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (1.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Select a material from the top of the screen",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (0.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("or with the \'1\' \'2\' \'3\' \'4\' \'5\' keys.",                (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (2.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Press the \'r\' key to reset the simulation.",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (4.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("Press the escape key to return to the main menu.",               (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (6.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
         }
     }
 
+    draw_cursor(x, y, brush_size);
     SDL_RenderPresent(renderer);
 }
 
@@ -184,7 +184,7 @@ void Renderer::draw_text(const char *text, int posx, int posy, int size) {
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy) {
-    draw_text(text, posx, posy, 16, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
+    draw_text(text, posx, posy, 32, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }
 
 void Renderer::draw_text(const int text, int posx, int posy, int size, SDL_Color color) {
@@ -196,5 +196,5 @@ void Renderer::draw_text(const int text, int posx, int posy, int size) {
 }
 
 void Renderer::draw_text(const int text, int posx, int posy) {
-    draw_text(to_string(text).c_str(), posx, posy, 16, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
+    draw_text(to_string(text).c_str(), posx, posy, 32, { TEXT_COLOR.r, TEXT_COLOR.g, TEXT_COLOR.b });
 }
