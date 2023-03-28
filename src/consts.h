@@ -22,6 +22,8 @@ const SDL_Color BG_COLOR = { 242, 240, 229 };
 const SDL_Color HEADER_COLOR = { 69, 68, 79 };
 const SDL_Color TEXT_COLOR = { 242, 240, 229 };
 
+const char* const AUDIO_PATH = "bin/assets/sandsound.wav";
+
 const char* const LOGO_PATH = "bin/assets/logo.png";
 const char* const ICON_PATH = "bin/assets/icon.png";
 const int LOGO_WIDTH = 194;
