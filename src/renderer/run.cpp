@@ -2,14 +2,13 @@
 
 using namespace std;
 
-void Renderer::run() {
+bool Renderer::run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
     bool quit = false;
     bool mousePressed = false;
     SDL_Event e;
     Material mat = SAND;
     int x, y, dx, dy;
-    mat_text = SAND_HEADER;
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -17,6 +16,7 @@ void Renderer::run() {
             switch(e.type) {
                 case SDL_QUIT:
                     quit = true;
+                    return true;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
@@ -67,6 +67,9 @@ void Renderer::run() {
                             cout << "Resetting grid..." << endl;
                             reset_grid();
                             break;
+                        case SDLK_ESCAPE:
+                            quit = true;
+                            break;
                         default:
                             break;
                     }
@@ -93,7 +96,8 @@ void Renderer::run() {
         if (ticksDelta > TICK_RATE) {
             ticksB = ticksA;
             update();
-            render();
+            render(false);
         }
     }
+    return false;
 }
