@@ -37,7 +37,8 @@ class Renderer {
         Button *music_button;
         Button *grid_button;
         bool music_on = true;
-        bool sound_on = false;
+        bool fx_playing = false;
+        bool fx_play = false;
     protected:
         void render(bool);
 
