@@ -13,6 +13,8 @@ const int GRID_CELL_SIZE = 4;
 const int GRID_WIDTH = SCREEN_WIDTH / GRID_CELL_SIZE;
 const int GRID_HEIGHT = (SCREEN_HEIGHT - (2 * SCREEN_PADDING)) / GRID_CELL_SIZE;
 
+const char* const NAME = "Sand Scape";
+
 const char* const SAND_HEADER = "SAND";
 const char* const GRAVEL_HEADER = "GRAVEL";
 const char* const WATER_HEADER = "WATER";

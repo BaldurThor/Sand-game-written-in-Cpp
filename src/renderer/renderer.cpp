@@ -7,7 +7,7 @@ Renderer::Renderer() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         throw runtime_error(string("SDL could not initialize! SDL_Error: ") + SDL_GetError());
     }
-    window = SDL_CreateWindow("Sand Simulation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    window = SDL_CreateWindow(NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 
     if (window == NULL) {
         throw runtime_error(string("Window could not be created! SDL_Error: ") + SDL_GetError());
