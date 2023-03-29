@@ -7,12 +7,8 @@ make
 # To run:
 
 ```bash
-./bin/sand.exe
+./start.bat
 ```
 
 
-## or:
-
-```bash
-start bin/sand.exe
-```
+## ONLY WORKS ON WINDOWS
