@@ -5,6 +5,8 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+/* const int SCREEN_WIDTH = 900;
+const int SCREEN_HEIGHT = 800; */
 const int SCREEN_PADDING = 20;
 
 const int TICK_RATE = 1000 / 60;
@@ -27,6 +29,7 @@ const SDL_Color MENU_BUTTON_COLOR = { 0x80, 0x80, 0x80 };
 const SDL_Color MENU_BUTTON_HOVER_COLOR = { 0, 0, 0 };
 
 const char* const AUDIO_PATH = "bin/assets/sandsound.wav";
+const char* const MUSIC_PATH = "bin/assets/lady-of-the-80x27s-128379.wav";
 
 const char* const LOGO_PATH = "bin/assets/logo.png";
 const char* const ICON_PATH = "bin/assets/icon.png";
