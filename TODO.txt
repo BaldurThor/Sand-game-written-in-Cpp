@@ -15,11 +15,6 @@ TODO:
         -Cement
         -Grass, where if it touches another material it sticks to it
     -stasis
-    -main menu - scenes
-    -some kind of settings
-    -quit
-    -pause-on esc
-    -audio
 
 DONE:
     -LAGA LEKA -------BUIÐ
@@ -27,3 +22,8 @@ DONE:
     -Materials have weight so that ex. stone gets buried under sand and sand or stone go under water.
     -UI
     -Better color scheme for the background.
+    -main menu
+    -how to play
+    -quit
+    -pause-on esc
+    -audio
