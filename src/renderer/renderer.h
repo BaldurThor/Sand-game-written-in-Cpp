@@ -24,6 +24,8 @@ class Renderer {
         Mix_Chunk *water_sound;
         Mix_Chunk *oil_sound;
         Mix_Chunk *wall_sound;
+        Mix_Chunk *remove_sound;
+        Mix_Chunk *sounds[6] = {remove_sound, sand_sound, gravel_sound, water_sound, oil_sound, wall_sound};
         int brush_size = 5; // must be odd
         Material mat = SAND;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };

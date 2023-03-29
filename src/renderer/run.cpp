@@ -5,11 +5,11 @@ using namespace std;
 bool Renderer::run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
     bool quit = false;
+    bool musicPlaying = true;
     bool mousePressed = false;
     int index = 0;
     SDL_Event e;
     int x, y, dx, dy;
-    Mix_Chunk *sounds[5] = {sand_sound, gravel_sound, water_sound, oil_sound, wall_sound};
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -84,7 +84,13 @@ bool Renderer::run() {
                             quit = true;
                             break;
                         case SDLK_0:
-                            Mix_HaltMusic();
+                            if (musicPlaying) {
+                                Mix_PauseMusic();
+                                musicPlaying = false;
+                            } else {
+                                Mix_ResumeMusic();
+                                musicPlaying = true;
+                            }
                             break;
                         default:
                             break;

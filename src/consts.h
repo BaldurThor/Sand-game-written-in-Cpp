@@ -33,6 +33,7 @@ const char* const WATER_SOUND_PATH = "bin/assets/watersound.wav";
 const char* const OIL_SOUND_PATH = "bin/assets/oilsound.wav";
 const char* const WALL_SOUND_PATH = "bin/assets/wallsound.wav";
 const char* const MUSIC_PATH = "bin/assets/lady-of-the-80x27s-128379.wav";
+const char* const REMOVE_SOUND_PATH = "bin/assets/removesound.wav";
 
 const char* const LOGO_PATH = "bin/assets/logo.png";
 const char* const ICON_PATH = "bin/assets/icon.png";

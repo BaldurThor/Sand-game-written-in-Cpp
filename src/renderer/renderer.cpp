@@ -34,6 +34,7 @@ Renderer::Renderer() {
     water_sound = Mix_LoadWAV(WATER_SOUND_PATH);
     oil_sound = Mix_LoadWAV(OIL_SOUND_PATH);
     wall_sound = Mix_LoadWAV(WALL_SOUND_PATH);
+    remove_sound = Mix_LoadWAV(REMOVE_SOUND_PATH);
     if (sand_sound == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
@@ -49,7 +50,9 @@ Renderer::Renderer() {
     if (wall_sound == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-
+    if (remove_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
     Mix_PlayMusic(music, -1);
 
     // Initialize SDL_ttf.
@@ -101,11 +104,13 @@ Renderer::~Renderer() {
     Mix_FreeChunk(water_sound);
     Mix_FreeChunk(oil_sound);
     Mix_FreeChunk(wall_sound);
+    Mix_FreeChunk(remove_sound);
     sand_sound = NULL;
     gravel_sound = NULL;
     water_sound = NULL;
     oil_sound = NULL;
     wall_sound = NULL;
+    remove_sound = NULL;
     music = NULL;
     window = NULL;
     renderer = NULL;
