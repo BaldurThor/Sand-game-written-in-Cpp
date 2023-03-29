@@ -66,6 +66,11 @@ Renderer::~Renderer() {
     delete(start_button);
     delete(how_to_play_button);
     delete(exit_button);
+    delete(sand_button);
+    delete(gravel_button);
+    delete(water_button);
+    delete(oil_button);
+    delete(wall_button);
     TTF_Quit();
     SDL_Quit();
     RNG::free_instance();

@@ -31,7 +31,11 @@ void Renderer::menu() {
                 case SDL_KEYDOWN:
                     switch (e.key.keysym.sym) {
                         case SDLK_ESCAPE:
-                            how_to_play = false;
+                            if (how_to_play) {
+                                how_to_play = false;
+                            } else {
+                                quit = run();
+                            }
                             break;
                     }
                     break;
