@@ -6,8 +6,10 @@ bool Renderer::run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
     bool quit = false;
     bool mousePressed = false;
+    int index = 0;
     SDL_Event e;
     int x, y, dx, dy;
+    Mix_Chunk *sounds[5] = {sand_sound, gravel_sound, water_sound, oil_sound, wall_sound};
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -19,6 +21,7 @@ bool Renderer::run() {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     mousePressed = true;
+                    Mix_PlayChannel(-1, sounds[index], -1);
                     SDL_GetMouseState(&dx, &dy);
                     if (sand_button->within(dx, dy)) {
                         mat = SAND;
@@ -34,6 +37,7 @@ bool Renderer::run() {
                     dy -= SCREEN_PADDING;
                     break;
                 case SDL_MOUSEBUTTONUP:
+                    Mix_HaltChannel(-1);
                     mousePressed = false;
                     break;
                 case SDL_MOUSEWHEEL:
@@ -54,18 +58,23 @@ bool Renderer::run() {
                 case SDL_KEYDOWN:
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
+                            index = 0;
                             mat = SAND;
                             break;
                         case SDLK_2:
+                            index = 1;
                             mat = GRAVEL;
                             break;
                         case SDLK_3:
+                            index = 2;
                             mat = WATER;
                             break;
-                        case SDLK_4:    
+                        case SDLK_4:  
+                            index = 3;  
                             mat = OIL;
                             break;
                         case SDLK_5:
+                            index = 4;
                             mat = WALL;
                             break;
                         case SDLK_r:
@@ -73,6 +82,9 @@ bool Renderer::run() {
                             break;
                         case SDLK_ESCAPE:
                             quit = true;
+                            break;
+                        case SDLK_0:
+                            Mix_HaltMusic();
                             break;
                         default:
                             break;

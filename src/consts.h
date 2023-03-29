@@ -27,7 +27,11 @@ const SDL_Color SELECTED_TEXT_COLOR = { 0, 0, 0 };
 const SDL_Color MENU_BUTTON_COLOR = { 0x80, 0x80, 0x80 };
 const SDL_Color MENU_BUTTON_HOVER_COLOR = { 0, 0, 0 };
 
-const char* const AUDIO_PATH = "bin/assets/sandsound.wav";
+const char* const GRAVEL_SOUND_PATH = "bin/assets/gravelsound.wav";
+const char* const SAND_SOUND_PATH = "bin/assets/sandsound.wav";
+const char* const WATER_SOUND_PATH = "bin/assets/watersound.wav";
+const char* const OIL_SOUND_PATH = "bin/assets/oilsound.wav";
+const char* const WALL_SOUND_PATH = "bin/assets/wallsound.wav";
 const char* const MUSIC_PATH = "bin/assets/lady-of-the-80x27s-128379.wav";
 
 const char* const LOGO_PATH = "bin/assets/logo.png";

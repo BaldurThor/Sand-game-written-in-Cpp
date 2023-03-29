@@ -4,8 +4,6 @@ using namespace std;
 
 Renderer::Renderer() {
 
-    SDL_SetHint(SDL_HINT_FRAMEBUFFER_ACCELERATION, "1");
-
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         throw runtime_error(string("SDL could not initialize! SDL_Error: ") + SDL_GetError());
     }
@@ -19,7 +17,42 @@ Renderer::Renderer() {
     if (renderer == NULL) {
         throw runtime_error(string("Renderer could not be created! SDL Error: ") + SDL_GetError());
     }
-    
+
+    // Initialize SDL_mixer.
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        throw runtime_error(string("SDL_mixer could not initialize! SDL_mixer Error: ") + Mix_GetError());
+    }
+
+    // Load music.
+    music = Mix_LoadMUS(MUSIC_PATH);
+    if (music == NULL) {
+        throw runtime_error(string("Failed to load music! SDL_mixer Error: ") + Mix_GetError());
+    }
+    // Load sound effects.
+    sand_sound = Mix_LoadWAV(SAND_SOUND_PATH);
+    gravel_sound = Mix_LoadWAV(GRAVEL_SOUND_PATH);
+    water_sound = Mix_LoadWAV(WATER_SOUND_PATH);
+    oil_sound = Mix_LoadWAV(OIL_SOUND_PATH);
+    wall_sound = Mix_LoadWAV(WALL_SOUND_PATH);
+    if (sand_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+    if (gravel_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+    if (water_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+    if (oil_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+    if (wall_sound == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+
+    Mix_PlayMusic(music, -1);
+
+    // Initialize SDL_ttf.
     if (TTF_Init() < 0) {
         throw runtime_error(string("SDL_ttf could not initialize! SDL_ttf Error: ") + SDL_GetError());
     }
@@ -61,6 +94,19 @@ Renderer::Renderer() {
 Renderer::~Renderer() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    Mix_HaltMusic();
+    Mix_FreeMusic(music);
+    Mix_FreeChunk(sand_sound);
+    Mix_FreeChunk(gravel_sound);
+    Mix_FreeChunk(water_sound);
+    Mix_FreeChunk(oil_sound);
+    Mix_FreeChunk(wall_sound);
+    sand_sound = NULL;
+    gravel_sound = NULL;
+    water_sound = NULL;
+    oil_sound = NULL;
+    wall_sound = NULL;
+    music = NULL;
     window = NULL;
     renderer = NULL;
     delete(start_button);
@@ -71,6 +117,7 @@ Renderer::~Renderer() {
     delete(water_button);
     delete(oil_button);
     delete(wall_button);
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
     RNG::free_instance();
