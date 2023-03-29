@@ -7,7 +7,7 @@ make
 # To run:
 
 ```bash
-./start.bat
+start start.bat
 ```
 
 
