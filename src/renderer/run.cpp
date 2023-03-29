@@ -20,19 +20,32 @@ bool Renderer::run() {
                     return true;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
+                    sound_on = true;
                     mousePressed = true;
-                    Mix_PlayChannel(-1, sounds[index], -1);
                     SDL_GetMouseState(&dx, &dy);
                     if (sand_button->within(dx, dy)) {
+                        index = 0;
                         mat = SAND;
                     } else if (gravel_button->within(dx, dy)) {
+                        index = 1;
                         mat = GRAVEL;
                     } else if (water_button->within(dx, dy)) {
+                        index = 2;
                         mat = WATER;
                     } else if (oil_button->within(dx, dy)) {
+                        index = 3;
                         mat = OIL;
                     } else if (wall_button->within(dx, dy)) {
+                        index = 4;
                         mat = WALL;
+                    } else if (music_button->within(dx, dy)) {
+                        if (music_on) {
+                            Mix_PauseMusic();
+                        }
+                        else {
+                            Mix_ResumeMusic();
+                        }
+                        music_on = !music_on;
                     }
                     dy -= SCREEN_PADDING;
                     break;
@@ -84,7 +97,13 @@ bool Renderer::run() {
                             quit = true;
                             break;
                         case SDLK_0:
-                            Mix_HaltMusic();
+                            if (music_on) {
+                                Mix_PauseMusic();
+                            }
+                            else {
+                                Mix_ResumeMusic();
+                            }
+                            music_on = !music_on;
                             break;
                         default:
                             break;
@@ -96,12 +115,20 @@ bool Renderer::run() {
         }
         if (mousePressed) {
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                if (sound_on && grid_button->within(x, y)) {
+                    Mix_PlayChannel(-1, sounds[index], -1);
+                    sound_on = false;
+                }
                 y -= SCREEN_PADDING;
                 fill_grid(x, y, dx, dy, mat);
                 dx = x;
                 dy = y;
             }
             else {
+                if (sound_on && grid_button->within(x, y)) {
+                    Mix_PlayChannel(-1, sounds[0], -1);
+                    sound_on = false;
+                }
                 y -= SCREEN_PADDING;
                 fill_grid(x, y, dx ,dy, NONE);
                 dx = x;

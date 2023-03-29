@@ -86,7 +86,8 @@ Renderer::Renderer() {
     water_button = new Button(WATER_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
     oil_button = new Button(OIL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
     wall_button = new Button(WALL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-
+    music_button = new Button(MUSIC_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    grid_button = new Button(GRID_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
 
     SDL_ShowCursor(SDL_DISABLE);
 }
@@ -117,6 +118,8 @@ Renderer::~Renderer() {
     delete(water_button);
     delete(oil_button);
     delete(wall_button);
+    delete(music_button);
+    delete(grid_button);
     Mix_Quit();
     TTF_Quit();
     SDL_Quit();

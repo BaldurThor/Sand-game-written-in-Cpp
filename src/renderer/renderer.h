@@ -38,6 +38,10 @@ class Renderer {
         Button *water_button;
         Button *oil_button;
         Button *wall_button;
+        Button *music_button;
+        Button *grid_button;
+        bool music_on = true;
+        bool sound_on = false;
     protected:
         void render(bool);
 

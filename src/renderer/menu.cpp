@@ -25,7 +25,16 @@ void Renderer::menu() {
                             how_to_play = true;
                         } else if (exit_button->within(x, y)) {
                             quit = true;
+                        } else if (music_button->within(x, y)) {
+                            if (music_on) {
+                                Mix_PauseMusic();
+                            }
+                            else {
+                                Mix_ResumeMusic();
+                            }
+                            music_on = !music_on;
                         }
+
                     }
                     break;
                 case SDL_KEYDOWN:
@@ -37,6 +46,14 @@ void Renderer::menu() {
                                 quit = run();
                             }
                             break;
+                        case SDLK_0:
+                            if (music_on) {
+                                Mix_PauseMusic();
+                            }
+                            else {
+                                Mix_ResumeMusic();
+                            }
+                            music_on = !music_on;
                     }
                     break;
             }
