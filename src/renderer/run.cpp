@@ -39,10 +39,10 @@ bool Renderer::run() {
                         mat = WALL;
                     } else if (music_button->within(dx, dy)) {
                         if (music_on) {
-                            Mix_PauseMusic();
+                            mediaHandler->pause_music();
                         }
                         else {
-                            Mix_ResumeMusic();
+                            mediaHandler->continue_music();
                         }
                         music_on = !music_on;
                     }
@@ -50,7 +50,7 @@ bool Renderer::run() {
                     break;
                 case SDL_MOUSEBUTTONUP:
                     fx_playing = false;
-                    Mix_HaltChannel(-1);
+                    mediaHandler->stop_sound();
                     mousePressed = false;
                     break;
                 case SDL_MOUSEWHEEL:
@@ -72,7 +72,7 @@ bool Renderer::run() {
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
                             if (fx_playing) {
-                                Mix_HaltChannel(-1);
+                                mediaHandler->stop_sound();
                                 fx_play = true;
                             }
                             index = 1;
@@ -80,7 +80,7 @@ bool Renderer::run() {
                             break;
                         case SDLK_2:
                             if (fx_playing) {
-                                Mix_HaltChannel(-1);
+                                mediaHandler->stop_sound();
                                 fx_play = true;
                             }
                             index = 2;
@@ -88,7 +88,7 @@ bool Renderer::run() {
                             break;
                         case SDLK_3:
                             if (fx_playing) {
-                                Mix_HaltChannel(-1);
+                                mediaHandler->stop_sound();
                                 fx_play = true;
                             }
                             index = 3;
@@ -96,7 +96,7 @@ bool Renderer::run() {
                             break;
                         case SDLK_4:
                             if (fx_playing) {
-                                Mix_HaltChannel(-1);
+                                mediaHandler->stop_sound();
                                 fx_play = true;
                             }  
                             index = 4;  
@@ -104,7 +104,7 @@ bool Renderer::run() {
                             break;
                         case SDLK_5:
                             if (fx_playing) {
-                                Mix_HaltChannel(-1);
+                                mediaHandler->stop_sound();
                                 fx_play = true;
                             }
                             index = 5;
@@ -118,10 +118,10 @@ bool Renderer::run() {
                             break;
                         case SDLK_0:
                             if (music_on) {
-                                Mix_PauseMusic();
+                                mediaHandler->pause_music();
                             }
                             else {
-                                Mix_ResumeMusic();
+                                mediaHandler->continue_music();
                             }
                             music_on = !music_on;
                             break;
@@ -136,11 +136,11 @@ bool Renderer::run() {
         if (mousePressed) {
             if (SDL_GetMouseState(&x, &y) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
                 if (fx_play && grid_button->within(x, y)) {
-                    Mix_PlayChannel(-1, sounds[index], -1);
+                    mediaHandler->play_sound(index);
                     fx_play = false;
                 }
                 if (fx_playing && !grid_button->within(x, y)) {
-                    Mix_HaltChannel(-1);
+                    mediaHandler->stop_sound();
                     fx_play = true;
                 }
                 y -= SCREEN_PADDING;
@@ -150,11 +150,11 @@ bool Renderer::run() {
             }
             else {
                 if (fx_play && grid_button->within(x, y)) {
-                    Mix_PlayChannel(-1, sounds[0], -1);
+                    mediaHandler->play_sound(0);
                     fx_play = false;
                 }
                 if (fx_playing && !grid_button->within(x, y)) {
-                    Mix_HaltChannel(-1);
+                    mediaHandler->stop_sound();
                     fx_play = true;
                 }
                 y -= SCREEN_PADDING;

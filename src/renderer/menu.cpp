@@ -27,10 +27,10 @@ void Renderer::menu() {
                             quit = true;
                         } else if (music_button->within(x, y)) {
                             if (music_on) {
-                                Mix_PauseMusic();
+                                mediaHandler->pause_music();
                             }
                             else {
-                                Mix_ResumeMusic();
+                                mediaHandler->continue_music();
                             }
                             music_on = !music_on;
                         }
@@ -48,10 +48,10 @@ void Renderer::menu() {
                             break;
                         case SDLK_0:
                             if (music_on) {
-                                Mix_PauseMusic();
+                                mediaHandler->pause_music();
                             }
                             else {
-                                Mix_ResumeMusic();
+                                mediaHandler->continue_music();
                             }
                             music_on = !music_on;
                     }

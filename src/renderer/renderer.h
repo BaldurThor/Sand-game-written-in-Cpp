@@ -5,21 +5,18 @@
 #include <stdexcept>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
-#include "SDL2/SDL_image.h"
-#include "SDL2/SDL_mixer.h"
 
 #include "../materials/materialsStruct.h"
 #include "../consts.h"
 #include "../color/colorMixer.h"
 #include "../button/button.h"
+#include "../media/mediaHandler.h"
 
 class Renderer {
     private:
         SDL_Renderer *renderer;
         SDL_Window *window;
-        SDL_Texture *logo_texture;
-        Mix_Music *music;
-        Mix_Chunk *sounds[6];
+        MediaHandler *mediaHandler;
         int brush_size = 5; // must be odd
         Material mat = SAND;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
