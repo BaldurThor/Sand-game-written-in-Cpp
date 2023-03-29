@@ -118,12 +118,15 @@ void Renderer::UI_layer(bool menu) {
 
     draw_text(RESET_TEXT, TEXT_PADDING, SCREEN_HEIGHT - (MATERIAL_BUTTON_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE);
     draw_text(brush_size, SCREEN_WIDTH - ((2 * MATERIAL_BUTTON_FONT_SIZE) + TEXT_PADDING), TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE);
+    SDL_Rect play_pause_rect = mediaHandler->get_play_pause_rect();
+    SDL_RenderCopy(renderer, mediaHandler->get_play_pause_texture(), &play_pause_rect, &MUSIC_BUTTON_RECT);
+    
     if (menu) {
         //draw menu texts
         SDL_Rect fadeRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x20);
         SDL_RenderFillRect(renderer, &fadeRect);
-        SDL_RenderCopy(renderer, logo_texture, NULL, &LOGO_RECT);
+        SDL_RenderCopy(renderer, mediaHandler->get_logo_texture(), NULL, &LOGO_RECT);
         if (!how_to_play) {
             start_button->update(x, y);
             how_to_play_button->update(x, y);
