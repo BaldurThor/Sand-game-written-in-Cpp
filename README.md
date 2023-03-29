@@ -9,6 +9,6 @@ make
 ```bash
 start start.bat
 ```
-or just run start.bat
+or just run sand.exe
 
 # ONLY WORKS ON WINDOWS

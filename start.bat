@@ -1,1 +1,2 @@
-start ./bin/sand.exe
+cd bin
+start sand.exe

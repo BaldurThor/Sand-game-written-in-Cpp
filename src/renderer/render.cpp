@@ -156,7 +156,7 @@ void Renderer::UI_layer(bool menu) {
 }
 
 void Renderer::draw_text(const char *text, int posx, int posy, int size, SDL_Color color) {
-    TTF_Font *font = TTF_OpenFont("dogica.ttf", size);
+    TTF_Font *font = TTF_OpenFont(FONT_PATH, size);
     if (font == NULL) {
         cout << "Failed to load font! SDL_ttf Error: " << TTF_GetError() << endl;
         return;
