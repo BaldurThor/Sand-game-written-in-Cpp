@@ -9,6 +9,6 @@ make
 ```bash
 start start.bat
 ```
+or just run start.bat
 
-
-## ONLY WORKS ON WINDOWS
+# ONLY WORKS ON WINDOWS
