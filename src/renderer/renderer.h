@@ -19,11 +19,7 @@ class Renderer {
         SDL_Window *window;
         SDL_Texture *logo_texture;
         Mix_Music *music;
-        Mix_Chunk *sand_sound;
-        Mix_Chunk *gravel_sound;
-        Mix_Chunk *water_sound;
-        Mix_Chunk *oil_sound;
-        Mix_Chunk *wall_sound;
+        Mix_Chunk *sounds[6];
         int brush_size = 5; // must be odd
         Material mat = SAND;
         Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };

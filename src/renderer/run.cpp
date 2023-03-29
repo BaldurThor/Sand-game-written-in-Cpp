@@ -6,10 +6,9 @@ bool Renderer::run() {
     Uint64 ticksA = 0, ticksB = 0, ticksDelta;
     bool quit = false;
     bool mousePressed = false;
-    int index = 0;
+    int index = 1;
     SDL_Event e;
     int x, y, dx, dy;
-    Mix_Chunk *sounds[5] = {sand_sound, gravel_sound, water_sound, oil_sound, wall_sound};
 
     while (!quit) {
         ticksA = SDL_GetTicks();
@@ -24,19 +23,19 @@ bool Renderer::run() {
                     mousePressed = true;
                     SDL_GetMouseState(&dx, &dy);
                     if (sand_button->within(dx, dy)) {
-                        index = 0;
+                        index = 1;
                         mat = SAND;
                     } else if (gravel_button->within(dx, dy)) {
-                        index = 1;
+                        index = 2;
                         mat = GRAVEL;
                     } else if (water_button->within(dx, dy)) {
-                        index = 2;
+                        index = 3;
                         mat = WATER;
                     } else if (oil_button->within(dx, dy)) {
-                        index = 3;
+                        index = 4;
                         mat = OIL;
                     } else if (wall_button->within(dx, dy)) {
-                        index = 4;
+                        index = 5;
                         mat = WALL;
                     } else if (music_button->within(dx, dy)) {
                         if (music_on) {
@@ -55,7 +54,7 @@ bool Renderer::run() {
                     break;
                 case SDL_MOUSEWHEEL:
                     if (e.wheel.y > 0) {
-                        if (brush_size < 95) {
+                        if (brush_size < 50) {
                             brush_size += GRID_CELL_SIZE;
                         } else {
                             break;
@@ -71,23 +70,23 @@ bool Renderer::run() {
                 case SDL_KEYDOWN:
                     switch (e.key.keysym.sym) {
                         case SDLK_1:
-                            index = 0;
+                            index = 1;
                             mat = SAND;
                             break;
                         case SDLK_2:
-                            index = 1;
+                            index = 2;
                             mat = GRAVEL;
                             break;
                         case SDLK_3:
-                            index = 2;
+                            index = 3;
                             mat = WATER;
                             break;
                         case SDLK_4:  
-                            index = 3;  
+                            index = 4;  
                             mat = OIL;
                             break;
                         case SDLK_5:
-                            index = 4;
+                            index = 5;
                             mat = WALL;
                             break;
                         case SDLK_r:

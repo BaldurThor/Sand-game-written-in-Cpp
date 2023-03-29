@@ -29,27 +29,32 @@ Renderer::Renderer() {
         throw runtime_error(string("Failed to load music! SDL_mixer Error: ") + Mix_GetError());
     }
     // Load sound effects.
-    sand_sound = Mix_LoadWAV(SAND_SOUND_PATH);
-    gravel_sound = Mix_LoadWAV(GRAVEL_SOUND_PATH);
-    water_sound = Mix_LoadWAV(WATER_SOUND_PATH);
-    oil_sound = Mix_LoadWAV(OIL_SOUND_PATH);
-    wall_sound = Mix_LoadWAV(WALL_SOUND_PATH);
-    if (sand_sound == NULL) {
+    sounds[0] = Mix_LoadWAV(REMOVE_SOUND_PATH);
+    sounds[1] = Mix_LoadWAV(SAND_SOUND_PATH);
+    sounds[2] = Mix_LoadWAV(GRAVEL_SOUND_PATH);
+    sounds[3] = Mix_LoadWAV(WATER_SOUND_PATH);
+    sounds[4] = Mix_LoadWAV(OIL_SOUND_PATH);
+    sounds[5] = Mix_LoadWAV(WALL_SOUND_PATH);
+    
+    if (sounds[0] == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-    if (gravel_sound == NULL) {
+    if (sounds[1] == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-    if (water_sound == NULL) {
+    if (sounds[2] == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-    if (oil_sound == NULL) {
+    if (sounds[3] == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-    if (wall_sound == NULL) {
+    if (sounds[4] == NULL) {
         throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
     }
-
+    if (sounds[5] == NULL) {
+        throw runtime_error(string("Failed to load sand sound effect! SDL_mixer Error: ") + Mix_GetError());
+    }
+    
     Mix_PlayMusic(music, -1);
 
     // Initialize SDL_ttf.
@@ -97,16 +102,12 @@ Renderer::~Renderer() {
     SDL_DestroyWindow(window);
     Mix_HaltMusic();
     Mix_FreeMusic(music);
-    Mix_FreeChunk(sand_sound);
-    Mix_FreeChunk(gravel_sound);
-    Mix_FreeChunk(water_sound);
-    Mix_FreeChunk(oil_sound);
-    Mix_FreeChunk(wall_sound);
-    sand_sound = NULL;
-    gravel_sound = NULL;
-    water_sound = NULL;
-    oil_sound = NULL;
-    wall_sound = NULL;
+    Mix_FreeChunk(sounds[0]);
+    Mix_FreeChunk(sounds[1]);
+    Mix_FreeChunk(sounds[2]);
+    Mix_FreeChunk(sounds[3]);
+    Mix_FreeChunk(sounds[4]);
+    Mix_FreeChunk(sounds[5]);
     music = NULL;
     window = NULL;
     renderer = NULL;
