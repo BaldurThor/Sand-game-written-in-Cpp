@@ -11,6 +11,7 @@
 #include "../color/colorMixer.h"
 #include "../button/button.h"
 #include "../media/mediaHandler.h"
+#include "../screen/screen.h"
 
 class Renderer {
     private:
@@ -36,6 +37,7 @@ class Renderer {
         bool music_on = true;
         bool fx_playing = false;
         bool fx_play = false;
+        Screen *screen;
     protected:
         void render(bool);
 
@@ -62,6 +64,8 @@ class Renderer {
         void update();
         void update_helper(int, int);
         bool update_move(int, int, Pixle, int, int);
+
+        void resize_window();
         
         bool run();
     public:

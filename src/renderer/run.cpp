@@ -46,7 +46,7 @@ bool Renderer::run() {
                         }
                         music_on = !music_on;
                     }
-                    dy -= SCREEN_PADDING;
+                    dy -= screen->padding;
                     break;
                 case SDL_MOUSEBUTTONUP:
                     fx_playing = false;
@@ -143,7 +143,7 @@ bool Renderer::run() {
                     mediaHandler->stop_sound();
                     fx_play = true;
                 }
-                y -= SCREEN_PADDING;
+                y -= screen->padding;
                 fill_grid(x, y, dx, dy, mat);
                 dx = x;
                 dy = y;
@@ -157,7 +157,7 @@ bool Renderer::run() {
                     mediaHandler->stop_sound();
                     fx_play = true;
                 }
-                y -= SCREEN_PADDING;
+                y -= screen->padding;
                 fill_grid(x, y, dx ,dy, NONE);
                 dx = x;
                 dy = y;
