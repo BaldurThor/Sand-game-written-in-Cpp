@@ -32,6 +32,7 @@ Renderer::Renderer() {
 
     start_button = new Button(screen->start_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
     how_to_play_button = new Button(screen->how_to_play_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
+    resize_button = new Button(screen->resize_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
     exit_button = new Button(screen->exit_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
     sand_button = new Button(screen->sand_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
     gravel_button = new Button(screen->gravel_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
@@ -52,6 +53,7 @@ Renderer::~Renderer() {
     delete(screen);
     delete(start_button);
     delete(how_to_play_button);
+    delete(resize_button);
     delete(exit_button);
     delete(sand_button);
     delete(gravel_button);

@@ -28,7 +28,8 @@ void Screen::change_screen_size() {
     
     start_button_rect = { (width/2) + (3 * button_font_size) - (int)(5.5 * button_font_size), (height/2) - 2 * button_font_size, 5 * button_font_size, button_font_size };
     how_to_play_button_rect = { (width/2) - (int)(5.5 * button_font_size), (height/2) - button_font_size, 11* button_font_size, button_font_size };
-    exit_button_rect = { (width/2) + (int)(3.5 * button_font_size) - (int)(5.5 * button_font_size), (height/2), 4 * button_font_size, button_font_size };
+    resize_button_rect = { (width/2) + (int)(2.5 * button_font_size) - (int)(5.5 * button_font_size), (height/2), 6 * button_font_size, button_font_size };
+    exit_button_rect = { (width/2) + (int)(3.5 * button_font_size) - (int)(5.5 * button_font_size), (height/2) + button_font_size , 4 * button_font_size, button_font_size };
     
     sand_button_rect = {   material_text_padding                                   , material_text_padding, 4 * material_button_font_size, material_button_font_size };
     gravel_button_rect = { material_text_padding + material_button_font_size * 5   , material_text_padding, 6 * material_button_font_size, material_button_font_size };

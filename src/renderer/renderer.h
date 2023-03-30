@@ -26,6 +26,7 @@ class Renderer {
         bool how_to_play = false;
         Button *start_button;
         Button *how_to_play_button;
+        Button *resize_button;
         Button *exit_button;
         Button *sand_button;
         Button *gravel_button;

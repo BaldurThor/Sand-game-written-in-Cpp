@@ -49,6 +49,11 @@ const double LOGO_SCALE = 1.5;
 
 const char* const RESET_TEXT = "Press R to reset";
 
+const char* const MENU_START = "START";
+const char* const MENU_HOW_TO_PLAY = "HOW TO PLAY";
+const char* const MENU_RESIZE = "RESIZE";
+const char* const MENU_EXIT = "EXIT";
+
 const int TEXT_PADDING = 4;
 const int BUTTON_FONT_SIZE = 20;
 const int MATERIAL_TEXT_PADDING = 2;

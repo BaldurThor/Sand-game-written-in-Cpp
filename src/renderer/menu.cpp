@@ -23,6 +23,8 @@ void Renderer::menu() {
                             quit = run();
                         } else if (how_to_play_button->within(x, y)) {
                             how_to_play = true;
+                        } else if (resize_button->within(x, y)) {
+                            resize_window();
                         } else if (exit_button->within(x, y)) {
                             quit = true;
                         } else if (music_button->within(x, y)) {
