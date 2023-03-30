@@ -97,6 +97,7 @@ void Renderer::resize_window() {
     SDL_SetWindowSize(window, screen->width, screen->height);
     start_button->set_rect(screen->start_button_rect);
     how_to_play_button->set_rect(screen->how_to_play_button_rect);
+    resize_button->set_rect(screen->resize_button_rect);
     exit_button->set_rect(screen->exit_button_rect);
     sand_button->set_rect(screen->sand_button_rect);
     gravel_button->set_rect(screen->gravel_button_rect);

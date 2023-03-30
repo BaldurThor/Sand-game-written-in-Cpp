@@ -130,11 +130,13 @@ void Renderer::UI_layer(bool menu) {
         if (!how_to_play) {
             start_button->update(x, y);
             how_to_play_button->update(x, y);
+            resize_button->update(x, y);
             exit_button->update(x, y);
         }
-        draw_text("START", (screen->width/2) + (3 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2) - 2 * screen->button_font_size, screen->button_font_size , start_button->get_color());
-        draw_text("HOW TO PLAY", (screen->width/2) - (5.5 * screen->button_font_size), (screen->height/2) - screen->button_font_size, screen->button_font_size, how_to_play_button->get_color());
-        draw_text("EXIT", (screen->width/2) + (3.5 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2), screen->button_font_size , exit_button->get_color());
+        draw_text(MENU_START, (screen->width/2) + (3 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2) - 2 * screen->button_font_size, screen->button_font_size , start_button->get_color());
+        draw_text(MENU_HOW_TO_PLAY, (screen->width/2) - (5.5 * screen->button_font_size), (screen->height/2) - screen->button_font_size, screen->button_font_size, how_to_play_button->get_color());
+        draw_text(MENU_RESIZE, (screen->width/2) + (2.5 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2), screen->button_font_size, resize_button->get_color());
+        draw_text(MENU_EXIT, (screen->width/2) + (3.5 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2) + screen->button_font_size, screen->button_font_size , exit_button->get_color());
         if (how_to_play) {
             SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xbf);
             SDL_RenderFillRect(renderer, &screen->how_to_play_rect);

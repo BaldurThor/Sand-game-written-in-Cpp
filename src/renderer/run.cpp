@@ -125,6 +125,8 @@ bool Renderer::run() {
                             }
                             music_on = !music_on;
                             break;
+                        case SDLK_p:
+                            resize_window();
                         default:
                             break;
                     }
