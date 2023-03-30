@@ -13,7 +13,7 @@ void Renderer::render(bool menu) {
             Pixle pixle = grid[width][height];
             if (pixle.material != NONE) {
                 mat = Materials_struct::get_instance(pixle);
-                SDL_Rect fillRect = {width * GRID_CELL_SIZE, height * GRID_CELL_SIZE + SCREEN_PADDING, GRID_CELL_SIZE, GRID_CELL_SIZE};
+                SDL_Rect fillRect = {width * screen->grid_cell_size, height * screen->grid_cell_size + screen->padding, screen->grid_cell_size, screen->grid_cell_size};
                 SDL_Color color = add_noise(mat->color, pixle.color_noise);
                 SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 0xFF);
                 SDL_RenderFillRect(renderer, &fillRect);
@@ -67,10 +67,10 @@ void Renderer::UI_layer(bool menu) {
     SDL_GetMouseState(&x, &y);
 
     // Draw header and footer
-    SDL_Rect headerRect = { 0, 0, SCREEN_WIDTH, SCREEN_PADDING };
+    SDL_Rect headerRect = { 0, 0, screen->width, screen->padding };
     SDL_SetRenderDrawColor(renderer, HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0x9f);
     SDL_RenderFillRect(renderer, &headerRect);
-    SDL_Rect footerRect = { 0, SCREEN_HEIGHT - SCREEN_PADDING, SCREEN_WIDTH, SCREEN_PADDING };
+    SDL_Rect footerRect = { 0, screen->height - screen->padding, screen->width, screen->padding };
     SDL_SetRenderDrawColor(renderer, HEADER_COLOR.r, HEADER_COLOR.g, HEADER_COLOR.b, 0x9f);
     SDL_RenderFillRect(renderer, &footerRect);
 
@@ -109,45 +109,44 @@ void Renderer::UI_layer(bool menu) {
             break;
     }
 
-    draw_text(SAND_HEADER, TEXT_PADDING, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, sand_button_color);
-    draw_text(GRAVEL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 5, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, gravel_button_color);
-    draw_text(WATER_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 12, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, water_button_color);
-    draw_text(OIL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 18, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, oil_button_color);
-    draw_text(WALL_HEADER, TEXT_PADDING + MATERIAL_BUTTON_FONT_SIZE * 22, TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE, wall_button_color);
+    draw_text(SAND_HEADER, screen->text_padding, screen->text_padding, screen->material_button_font_size, sand_button_color);
+    draw_text(GRAVEL_HEADER, screen->text_padding + screen->material_button_font_size * 5, screen->text_padding, screen->material_button_font_size, gravel_button_color);
+    draw_text(WATER_HEADER, screen->text_padding + screen->material_button_font_size * 12, screen->text_padding, screen->material_button_font_size, water_button_color);
+    draw_text(OIL_HEADER, screen->text_padding + screen->material_button_font_size * 18, screen->text_padding, screen->material_button_font_size, oil_button_color);
+    draw_text(WALL_HEADER, screen->text_padding + screen->material_button_font_size * 22, screen->text_padding, screen->material_button_font_size, wall_button_color);
 
 
-    draw_text(RESET_TEXT, TEXT_PADDING, SCREEN_HEIGHT - (MATERIAL_BUTTON_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE);
-    draw_text(brush_size, SCREEN_WIDTH - ((2 * MATERIAL_BUTTON_FONT_SIZE) + TEXT_PADDING), TEXT_PADDING, MATERIAL_BUTTON_FONT_SIZE);
+    draw_text(RESET_TEXT, screen->text_padding, screen->height - (screen->material_button_font_size), screen->how_to_play_font_size);
+    draw_text(brush_size, screen->width - ((2 * screen->material_button_font_size) + screen->text_padding), screen->text_padding, screen->material_button_font_size);
     SDL_Rect play_pause_rect = mediaHandler->get_play_pause_rect();
-    SDL_RenderCopy(renderer, mediaHandler->get_play_pause_texture(), &play_pause_rect, &MUSIC_BUTTON_RECT);
+    SDL_RenderCopy(renderer, mediaHandler->get_play_pause_texture(), &play_pause_rect, &screen->music_button_rect);
     
     if (menu) {
         //draw menu texts
-        SDL_Rect fadeRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+        SDL_Rect fadeRect = { 0, 0, screen->width, screen->height };
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x20);
         SDL_RenderFillRect(renderer, &fadeRect);
-        SDL_RenderCopy(renderer, mediaHandler->get_logo_texture(), NULL, &LOGO_RECT);
+        SDL_RenderCopy(renderer, mediaHandler->get_logo_texture(), NULL, &screen->logo_rect);
         if (!how_to_play) {
             start_button->update(x, y);
             how_to_play_button->update(x, y);
             exit_button->update(x, y);
         }
-        draw_text("START", (SCREEN_WIDTH/2) + (3 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - 2 * BUTTON_FONT_SIZE, BUTTON_FONT_SIZE , start_button->get_color());
-        draw_text("HOW TO PLAY", (SCREEN_WIDTH/2) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2) - BUTTON_FONT_SIZE, BUTTON_FONT_SIZE, how_to_play_button->get_color());
-        draw_text("EXIT", (SCREEN_WIDTH/2) + (3.5 * BUTTON_FONT_SIZE) - (5.5 * BUTTON_FONT_SIZE), (SCREEN_HEIGHT/2), BUTTON_FONT_SIZE , exit_button->get_color());
+        draw_text("START", (screen->width/2) + (3 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2) - 2 * screen->button_font_size, screen->button_font_size , start_button->get_color());
+        draw_text("HOW TO PLAY", (screen->width/2) - (5.5 * screen->button_font_size), (screen->height/2) - screen->button_font_size, screen->button_font_size, how_to_play_button->get_color());
+        draw_text("EXIT", (screen->width/2) + (3.5 * screen->button_font_size) - (5.5 * screen->button_font_size), (screen->height/2), screen->button_font_size , exit_button->get_color());
         if (how_to_play) {
-            SDL_Rect howToPlayRect = { (SCREEN_WIDTH/2) - (HOW_TO_PLAY_WIDTH/2), (SCREEN_HEIGHT/2) - (HOW_TO_PLAY_HEIGHT/2), HOW_TO_PLAY_WIDTH, HOW_TO_PLAY_HEIGHT };
             SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xbf);
-            SDL_RenderFillRect(renderer, &howToPlayRect);
+            SDL_RenderFillRect(renderer, &screen->how_to_play_rect);
             //add lines
-            draw_text("HOW TO PLAY",                                                    (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (7.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Use the left mouse button to draw materials on the screen.",     (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (5.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Use the right mouse button to erase materials from the screen.", (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (3.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Use the mouse wheel to change the brush size",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) - (1.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Select a material from the top of the screen",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (0.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("or with the \'1\' \'2\' \'3\' \'4\' \'5\' keys.",                (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (2.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Press the \'r\' key to reset the simulation.",                   (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (4.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
-            draw_text("Press the escape key to return to the main menu.",               (SCREEN_WIDTH/2) - (31 * HOW_TO_PLAY_FONT_SIZE), (SCREEN_HEIGHT/2) + (6.5 * HOW_TO_PLAY_FONT_SIZE), HOW_TO_PLAY_FONT_SIZE , BG_COLOR);
+            draw_text("HOW TO PLAY",                                                    (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) - (7.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Use the left mouse button to draw materials on the screen.",     (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) - (5.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Use the right mouse button to erase materials from the screen.", (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) - (3.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Use the mouse wheel to change the brush size",                   (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) - (1.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Select a material from the top of the screen",                   (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) + (0.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("or with the \'1\' \'2\' \'3\' \'4\' \'5\' keys.",                (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) + (2.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Press the \'r\' key to reset the simulation.",                   (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) + (4.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
+            draw_text("Press the escape key to return to the main menu.",               (screen->width/2) - (31 * screen->how_to_play_font_size), (screen->height/2) + (6.5 * screen->how_to_play_font_size), screen->how_to_play_font_size , BG_COLOR);
         }
     }
 

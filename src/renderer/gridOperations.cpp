@@ -9,11 +9,11 @@ void Renderer::reset_grid() {
 }
 
 void Renderer::put_pixle(int x, int y, Material state) {
-    if (x < SCREEN_WIDTH && y < SCREEN_HEIGHT - (2 * SCREEN_PADDING) && x >= 0 && y >= 0) {
-        if (grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE] == NONE || state == NONE || state == WALL) {
-            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE] = state;
-            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].velocity = Materials_struct::get_instance(state)->weight;
-            grid[x / GRID_CELL_SIZE][y / GRID_CELL_SIZE].color_noise = RNG::get_color_noise();
+    if (x < screen->width && y < screen->height - (2 * screen->padding) && x >= 0 && y >= 0) {
+        if (grid[x / screen->grid_cell_size][y / screen->grid_cell_size] == NONE || state == NONE || state == WALL) {
+            grid[x / screen->grid_cell_size][y / screen->grid_cell_size] = state;
+            grid[x / screen->grid_cell_size][y / screen->grid_cell_size].velocity = Materials_struct::get_instance(state)->weight;
+            grid[x / screen->grid_cell_size][y / screen->grid_cell_size].color_noise = RNG::get_color_noise();
         }
     }
 }
@@ -96,6 +96,6 @@ void Renderer::fill_grid(int x, int y, int dx, int dy, Material state) {
 }
 
 void Renderer::draw_pixel(int x, int y) {
-    SDL_Rect pixel = { (x / GRID_CELL_SIZE) * GRID_CELL_SIZE, (y / GRID_CELL_SIZE) * GRID_CELL_SIZE, GRID_CELL_SIZE, GRID_CELL_SIZE };
+    SDL_Rect pixel = { (x / screen->grid_cell_size) * screen->grid_cell_size, (y / screen->grid_cell_size) * screen->grid_cell_size, screen->grid_cell_size, screen->grid_cell_size };
     SDL_RenderFillRect(renderer, &pixel);
 }

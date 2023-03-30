@@ -22,3 +22,7 @@ SDL_Color Button::get_color() {
 bool Button::within(int x, int y) {
     return x > rect.x && x < rect.x + rect.w && y > rect.y && y < rect.y + rect.h;
 }
+
+void Button::set_rect(SDL_Rect rect) {
+    this->rect = rect;
+}

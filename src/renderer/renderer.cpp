@@ -3,11 +3,12 @@
 using namespace std;
 
 Renderer::Renderer() {
+    screen = new Screen();
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         throw runtime_error(string("SDL could not initialize! SDL_Error: ") + SDL_GetError());
     }
-    window = SDL_CreateWindow(NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    window = SDL_CreateWindow(NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen->width, screen->height, 0);
 
     if (window == NULL) {
         throw runtime_error(string("Window could not be created! SDL_Error: ") + SDL_GetError());
@@ -29,16 +30,16 @@ Renderer::Renderer() {
         throw runtime_error(string("SDL_image could not initialize! SDL_image Error: ") + IMG_GetError());
     }
 
-    start_button = new Button(START_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
-    how_to_play_button = new Button(HOW_TO_PLAY_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
-    exit_button = new Button(EXIT_BUTTON_RECT, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
-    sand_button = new Button(SAND_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    gravel_button = new Button(GRAVEL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    water_button = new Button(WATER_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    oil_button = new Button(OIL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    wall_button = new Button(WALL_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    music_button = new Button(MUSIC_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
-    grid_button = new Button(GRID_BUTTON_RECT, TEXT_COLOR, TEXT_HOVER_COLOR);
+    start_button = new Button(screen->start_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
+    how_to_play_button = new Button(screen->how_to_play_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
+    exit_button = new Button(screen->exit_button_rect, MENU_BUTTON_COLOR, MENU_BUTTON_HOVER_COLOR);
+    sand_button = new Button(screen->sand_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    gravel_button = new Button(screen->gravel_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    water_button = new Button(screen->water_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    oil_button = new Button(screen->oil_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    wall_button = new Button(screen->wall_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    music_button = new Button(screen->music_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
+    grid_button = new Button(screen->grid_button_rect, TEXT_COLOR, TEXT_HOVER_COLOR);
 
     SDL_ShowCursor(SDL_DISABLE);
 }
@@ -48,6 +49,7 @@ Renderer::~Renderer() {
     SDL_DestroyWindow(window);
     window = NULL;
     renderer = NULL;
+    delete(screen);
     delete(start_button);
     delete(how_to_play_button);
     delete(exit_button);

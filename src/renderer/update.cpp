@@ -91,3 +91,18 @@ bool Renderer::update_move(int width, int height, Pixle pixle, int velocity, int
     }
     return false;
 }
+
+void Renderer::resize_window() {
+    screen->change_screen_size();
+    SDL_SetWindowSize(window, screen->width, screen->height);
+    start_button->set_rect(screen->start_button_rect);
+    how_to_play_button->set_rect(screen->how_to_play_button_rect);
+    exit_button->set_rect(screen->exit_button_rect);
+    sand_button->set_rect(screen->sand_button_rect);
+    gravel_button->set_rect(screen->gravel_button_rect);
+    water_button->set_rect(screen->water_button_rect);
+    oil_button->set_rect(screen->oil_button_rect);
+    wall_button->set_rect(screen->wall_button_rect);
+    music_button->set_rect(screen->music_button_rect);
+    grid_button->set_rect(screen->grid_button_rect);
+}

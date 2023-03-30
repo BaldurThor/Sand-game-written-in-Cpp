@@ -54,6 +54,8 @@ void Renderer::menu() {
                                 mediaHandler->continue_music();
                             }
                             music_on = !music_on;
+                        case SDLK_p:
+                            resize_window();
                     }
                     break;
             }

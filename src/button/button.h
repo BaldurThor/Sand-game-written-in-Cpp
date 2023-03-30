@@ -9,6 +9,7 @@ class Button {
         void update(int, int);
         SDL_Color get_color();
         bool within(int, int);
+        void set_rect(SDL_Rect);
     private:
         SDL_Rect rect;
         SDL_Color current_color;
