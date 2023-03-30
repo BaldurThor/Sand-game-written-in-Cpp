@@ -15,3 +15,8 @@ bool Pixle::operator==(const Material& other) const {
 bool Pixle::operator!=(const Material& other) const {
     return !(*this == other);
 }
+
+Pixle Pixle::operator=(const Material& mat) {
+    material = mat;
+    return *this;
+}

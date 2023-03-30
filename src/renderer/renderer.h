@@ -19,7 +19,7 @@ class Renderer {
         MediaHandler *mediaHandler;
         int brush_size = 5; // must be odd
         Material mat = SAND;
-        Pixle grid[GRID_WIDTH][GRID_HEIGHT] = { NONE };
+        Pixle grid[GRID_WIDTH][GRID_HEIGHT];
         SDL_Color background_color = { BG_COLOR.r, BG_COLOR.g, BG_COLOR.b };
         bool scan_direction = true;
         bool how_to_play = false;

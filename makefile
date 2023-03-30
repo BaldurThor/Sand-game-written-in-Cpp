@@ -9,7 +9,7 @@ CC = g++
 INCLUDE_PATHS = -Iinclude
 LIBRARY_PATHS = -Llib
 
-COMPILER_FLAGS = -w -Wl,-subsystem,windows
+COMPILER_FLAGS = -std=c++11 -w -Wl,-subsystem,windows
 LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2_ttf -lSDL2_image -lSDL2_mixer -lSDL2
 
 OBJ_NAME = bin/sand.exe
